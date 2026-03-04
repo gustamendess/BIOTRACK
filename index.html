@@ -553,8 +553,520 @@ async function hashSenha(senha) {
 /* 
    DADOS INJETADOS PELO processar.py
  */
-/* ##BIOTRACK_USERS_DATA## */
-/* ##BIOTRACK_PROFS_DATA## */
+const USERS = {
+  "ANA001": {
+    "password": "4e2baf653385b4ee6c75099548b1f7683c6ca49389eaaa57586bf8f5d4ffb30f",
+    "name": "Ana Silva",
+    "turma": "3A",
+    "performance": {
+      "BIO_ECO": {
+        "correct": 4,
+        "wrong": 12
+      },
+      "BIO_SATC": {
+        "correct": 23,
+        "wrong": 2
+      },
+      "BIO_CEL": {
+        "correct": 28,
+        "wrong": 0
+      },
+      "BIO_MQ": {
+        "correct": 24,
+        "wrong": 1
+      },
+      "BIO_EVO": {
+        "correct": 26,
+        "wrong": 0
+      },
+      "BIO_EMH": {
+        "correct": 23,
+        "wrong": 2
+      },
+      "BIO_ZOO": {
+        "correct": 27,
+        "wrong": 0
+      },
+      "BIO_BOT": {
+        "correct": 29,
+        "wrong": 0
+      },
+      "BIO_ANAFIS": {
+        "correct": 30,
+        "wrong": 0
+      }
+    },
+    "evolution": [
+      {
+        "label": "Aval.\nJan/26",
+        "scores": {
+          "BIO_ECO": 9,
+          "BIO_SATC": 60,
+          "BIO_CEL": 72,
+          "BIO_MQ": 56,
+          "BIO_EVO": 64,
+          "BIO_EMH": 52,
+          "BIO_ZOO": 68,
+          "BIO_BOT": 76,
+          "BIO_ANAFIS": 80
+        }
+      },
+      {
+        "label": "Reforço\nJan/26",
+        "scores": {
+          "BIO_ECO": 11,
+          "BIO_SATC": 60,
+          "BIO_CEL": 80,
+          "BIO_MQ": 68,
+          "BIO_EVO": 76,
+          "BIO_EMH": 64,
+          "BIO_ZOO": 80,
+          "BIO_BOT": 88,
+          "BIO_ANAFIS": 92
+        }
+      },
+      {
+        "label": "Aval.\nFev/26",
+        "scores": {
+          "BIO_ECO": 19,
+          "BIO_SATC": 80,
+          "BIO_CEL": 100,
+          "BIO_MQ": 84,
+          "BIO_EVO": 92,
+          "BIO_EMH": 80,
+          "BIO_ZOO": 96,
+          "BIO_BOT": 100,
+          "BIO_ANAFIS": 100
+        }
+      },
+      {
+        "label": "Reforço\nFev/26",
+        "scores": {
+          "BIO_ECO": 25,
+          "BIO_SATC": 92,
+          "BIO_CEL": 100,
+          "BIO_MQ": 96,
+          "BIO_EVO": 100,
+          "BIO_EMH": 92,
+          "BIO_ZOO": 100,
+          "BIO_BOT": 100,
+          "BIO_ANAFIS": 100
+        }
+      }
+    ]
+  },
+  "BRU002": {
+    "password": "ae1c49d9079717617d732cc7a42392e9fdff2c1a90eebee95054625b44e287f7",
+    "name": "Bruno Santos",
+    "turma": "3A",
+    "performance": {
+      "BIO_ECO": {
+        "correct": 20,
+        "wrong": 5
+      },
+      "BIO_SATC": {
+        "correct": 19,
+        "wrong": 6
+      },
+      "BIO_CEL": {
+        "correct": 22,
+        "wrong": 3
+      },
+      "BIO_MQ": {
+        "correct": 19,
+        "wrong": 6
+      },
+      "BIO_EVO": {
+        "correct": 21,
+        "wrong": 4
+      },
+      "BIO_EMH": {
+        "correct": 20,
+        "wrong": 5
+      },
+      "BIO_ZOO": {
+        "correct": 23,
+        "wrong": 2
+      },
+      "BIO_BOT": {
+        "correct": 24,
+        "wrong": 1
+      },
+      "BIO_ANAFIS": {
+        "correct": 25,
+        "wrong": 0
+      }
+    },
+    "evolution": [
+      {
+        "label": "Aval.\nJan/26",
+        "scores": {
+          "BIO_ECO": 40,
+          "BIO_SATC": 40,
+          "BIO_CEL": 48,
+          "BIO_MQ": 36,
+          "BIO_EVO": 44,
+          "BIO_EMH": 40,
+          "BIO_ZOO": 52,
+          "BIO_BOT": 56,
+          "BIO_ANAFIS": 60
+        }
+      },
+      {
+        "label": "Reforço\nJan/26",
+        "scores": {
+          "BIO_ECO": 52,
+          "BIO_SATC": 44,
+          "BIO_CEL": 60,
+          "BIO_MQ": 48,
+          "BIO_EVO": 56,
+          "BIO_EMH": 52,
+          "BIO_ZOO": 64,
+          "BIO_BOT": 68,
+          "BIO_ANAFIS": 72
+        }
+      },
+      {
+        "label": "Aval.\nFev/26",
+        "scores": {
+          "BIO_ECO": 68,
+          "BIO_SATC": 64,
+          "BIO_CEL": 76,
+          "BIO_MQ": 64,
+          "BIO_EVO": 72,
+          "BIO_EMH": 68,
+          "BIO_ZOO": 80,
+          "BIO_BOT": 84,
+          "BIO_ANAFIS": 88
+        }
+      },
+      {
+        "label": "Reforço\nFev/26",
+        "scores": {
+          "BIO_ECO": 80,
+          "BIO_SATC": 76,
+          "BIO_CEL": 88,
+          "BIO_MQ": 76,
+          "BIO_EVO": 84,
+          "BIO_EMH": 80,
+          "BIO_ZOO": 92,
+          "BIO_BOT": 96,
+          "BIO_ANAFIS": 100
+        }
+      }
+    ]
+  },
+  "CAR003": {
+    "password": "c0239dd1d7648109a2332b57ea05d93372af869e2f6e2d68088fe71768f06a63",
+    "name": "Carla Oliveira",
+    "turma": "3B",
+    "performance": {
+      "BIO_ECO": {
+        "correct": 24,
+        "wrong": 1
+      },
+      "BIO_SATC": {
+        "correct": 23,
+        "wrong": 2
+      },
+      "BIO_CEL": {
+        "correct": 26,
+        "wrong": 0
+      },
+      "BIO_MQ": {
+        "correct": 25,
+        "wrong": 0
+      },
+      "BIO_EVO": {
+        "correct": 27,
+        "wrong": 0
+      },
+      "BIO_EMH": {
+        "correct": 24,
+        "wrong": 1
+      },
+      "BIO_ZOO": {
+        "correct": 28,
+        "wrong": 0
+      },
+      "BIO_BOT": {
+        "correct": 29,
+        "wrong": 0
+      },
+      "BIO_ANAFIS": {
+        "correct": 30,
+        "wrong": 0
+      }
+    },
+    "evolution": [
+      {
+        "label": "Aval.\nJan/26",
+        "scores": {
+          "BIO_ECO": 56,
+          "BIO_SATC": 52,
+          "BIO_CEL": 64,
+          "BIO_MQ": 60,
+          "BIO_EVO": 68,
+          "BIO_EMH": 56,
+          "BIO_ZOO": 72,
+          "BIO_BOT": 76,
+          "BIO_ANAFIS": 80
+        }
+      },
+      {
+        "label": "Reforço\nJan/26",
+        "scores": {
+          "BIO_ECO": 68,
+          "BIO_SATC": 64,
+          "BIO_CEL": 76,
+          "BIO_MQ": 72,
+          "BIO_EVO": 80,
+          "BIO_EMH": 68,
+          "BIO_ZOO": 84,
+          "BIO_BOT": 88,
+          "BIO_ANAFIS": 92
+        }
+      },
+      {
+        "label": "Aval.\nFev/26",
+        "scores": {
+          "BIO_ECO": 84,
+          "BIO_SATC": 80,
+          "BIO_CEL": 92,
+          "BIO_MQ": 88,
+          "BIO_EVO": 96,
+          "BIO_EMH": 84,
+          "BIO_ZOO": 100,
+          "BIO_BOT": 100,
+          "BIO_ANAFIS": 100
+        }
+      },
+      {
+        "label": "Reforço\nFev/26",
+        "scores": {
+          "BIO_ECO": 96,
+          "BIO_SATC": 92,
+          "BIO_CEL": 100,
+          "BIO_MQ": 100,
+          "BIO_EVO": 100,
+          "BIO_EMH": 96,
+          "BIO_ZOO": 100,
+          "BIO_BOT": 100,
+          "BIO_ANAFIS": 100
+        }
+      }
+    ]
+  },
+  "DAN004": {
+    "password": "fbfd0cced64a4ac82b1c8a273a0194d27732c6e4d590966afa8a5943cd4b4f6b",
+    "name": "Daniel Pereira",
+    "turma": "3B",
+    "performance": {
+      "BIO_ECO": {
+        "correct": 22,
+        "wrong": 3
+      },
+      "BIO_SATC": {
+        "correct": 20,
+        "wrong": 5
+      },
+      "BIO_CEL": {
+        "correct": 24,
+        "wrong": 1
+      },
+      "BIO_MQ": {
+        "correct": 21,
+        "wrong": 4
+      },
+      "BIO_EVO": {
+        "correct": 23,
+        "wrong": 2
+      },
+      "BIO_EMH": {
+        "correct": 22,
+        "wrong": 3
+      },
+      "BIO_ZOO": {
+        "correct": 25,
+        "wrong": 0
+      },
+      "BIO_BOT": {
+        "correct": 26,
+        "wrong": 0
+      },
+      "BIO_ANAFIS": {
+        "correct": 27,
+        "wrong": 0
+      }
+    },
+    "evolution": [
+      {
+        "label": "Aval.\nJan/26",
+        "scores": {
+          "BIO_ECO": 48,
+          "BIO_SATC": 40,
+          "BIO_CEL": 56,
+          "BIO_MQ": 44,
+          "BIO_EVO": 52,
+          "BIO_EMH": 48,
+          "BIO_ZOO": 60,
+          "BIO_BOT": 64,
+          "BIO_ANAFIS": 68
+        }
+      },
+      {
+        "label": "Reforço\nJan/26",
+        "scores": {
+          "BIO_ECO": 60,
+          "BIO_SATC": 52,
+          "BIO_CEL": 68,
+          "BIO_MQ": 56,
+          "BIO_EVO": 64,
+          "BIO_EMH": 60,
+          "BIO_ZOO": 72,
+          "BIO_BOT": 76,
+          "BIO_ANAFIS": 80
+        }
+      },
+      {
+        "label": "Aval.\nFev/26",
+        "scores": {
+          "BIO_ECO": 76,
+          "BIO_SATC": 68,
+          "BIO_CEL": 84,
+          "BIO_MQ": 72,
+          "BIO_EVO": 80,
+          "BIO_EMH": 76,
+          "BIO_ZOO": 88,
+          "BIO_BOT": 92,
+          "BIO_ANAFIS": 96
+        }
+      },
+      {
+        "label": "Reforço\nFev/26",
+        "scores": {
+          "BIO_ECO": 88,
+          "BIO_SATC": 80,
+          "BIO_CEL": 96,
+          "BIO_MQ": 84,
+          "BIO_EVO": 92,
+          "BIO_EMH": 88,
+          "BIO_ZOO": 100,
+          "BIO_BOT": 100,
+          "BIO_ANAFIS": 100
+        }
+      }
+    ]
+  },
+  "EDU005": {
+    "password": "88080e5f1ac7817622de81798a641d8b3f5ba4a735cba58f5f40507098f2c8b1",
+    "name": "Eduarda Lima",
+    "turma": "3B",
+    "performance": {
+      "BIO_ECO": {
+        "correct": 26,
+        "wrong": 0
+      },
+      "BIO_SATC": {
+        "correct": 24,
+        "wrong": 1
+      },
+      "BIO_CEL": {
+        "correct": 27,
+        "wrong": 0
+      },
+      "BIO_MQ": {
+        "correct": 25,
+        "wrong": 0
+      },
+      "BIO_EVO": {
+        "correct": 28,
+        "wrong": 0
+      },
+      "BIO_EMH": {
+        "correct": 26,
+        "wrong": 0
+      },
+      "BIO_ZOO": {
+        "correct": 29,
+        "wrong": 0
+      },
+      "BIO_BOT": {
+        "correct": 30,
+        "wrong": 0
+      },
+      "BIO_ANAFIS": {
+        "correct": 30,
+        "wrong": 0
+      }
+    },
+    "evolution": [
+      {
+        "label": "Aval.\nJan/26",
+        "scores": {
+          "BIO_ECO": 64,
+          "BIO_SATC": 56,
+          "BIO_CEL": 68,
+          "BIO_MQ": 60,
+          "BIO_EVO": 72,
+          "BIO_EMH": 64,
+          "BIO_ZOO": 76,
+          "BIO_BOT": 80,
+          "BIO_ANAFIS": 84
+        }
+      },
+      {
+        "label": "Reforço\nJan/26",
+        "scores": {
+          "BIO_ECO": 76,
+          "BIO_SATC": 68,
+          "BIO_CEL": 80,
+          "BIO_MQ": 72,
+          "BIO_EVO": 84,
+          "BIO_EMH": 76,
+          "BIO_ZOO": 88,
+          "BIO_BOT": 92,
+          "BIO_ANAFIS": 96
+        }
+      },
+      {
+        "label": "Aval.\nFev/26",
+        "scores": {
+          "BIO_ECO": 92,
+          "BIO_SATC": 84,
+          "BIO_CEL": 96,
+          "BIO_MQ": 88,
+          "BIO_EVO": 100,
+          "BIO_EMH": 92,
+          "BIO_ZOO": 100,
+          "BIO_BOT": 100,
+          "BIO_ANAFIS": 100
+        }
+      },
+      {
+        "label": "Reforço\nFev/26",
+        "scores": {
+          "BIO_ECO": 100,
+          "BIO_SATC": 96,
+          "BIO_CEL": 100,
+          "BIO_MQ": 100,
+          "BIO_EVO": 100,
+          "BIO_EMH": 100,
+          "BIO_ZOO": 100,
+          "BIO_BOT": 100,
+          "BIO_ANAFIS": 100
+        }
+      }
+    ]
+  }
+};
+const PROFESSORS = {
+  "PROF01": {
+    "password": "00624b02e1f9b996a3278f559d5d55313552ad2c0bafc82adfd975c12df61eaf",
+    "name": "Gustavo Antunes",
+    "disciplina": "Biologia"
+  }
+};
 
 /* 
    CONSTANTES
