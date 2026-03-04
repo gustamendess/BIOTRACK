@@ -573,6 +573,20 @@
   .nav-tab::before { font-size: .95rem; content: attr(data-emoji); }
 }
 
+/* Altura do gráfico de evolução do aluno — controlada via CSS */
+#chartEvoAluno {
+  height: 320px !important;
+  width:  100%  !important;
+}
+
+@media (max-width: 900px) {
+  #chartEvoAluno { height: 260px !important; }
+}
+
+@media (max-width: 600px) {
+  #chartEvoAluno { height: 220px !important; }
+}
+
     /* ── PAINEL EVOLUÇÃO DO ALUNO ── */
 .evo-aluno-selector {
   background: var(--branco); border-radius: var(--radius);
@@ -614,9 +628,63 @@
 }
 .evo-placeholder-icon { font-size: 3rem; margin-bottom: 1rem; }
 .evo-placeholder p    { font-size: .95rem; }
+/* Gráfico evolução — maior à direita */
+#chartEvoAluno {
+  height: 380px !important;
+  width:  100%  !important;
+}
+
+/* Dificuldades — coluna menor com scroll */
+.evo-dificuldades-block {
+  max-height: 420px;
+  overflow-y: auto;
+}
+
+/* Mobile — empilha e reordena */
+@media (max-width: 900px) {
+  .evo-row-dupla {
+    grid-template-columns: 1fr;
+  }
+  .evo-dificuldades-block { order: 1; }  /* dificuldades acima */
+  .chart-block            { order: 2; }  /* gráfico abaixo */
+  #chartEvoAluno { height: 260px !important; }
+}
+@media (max-width: 600px) {
+  #chartEvoAluno { height: 220px !important; }
+}
+
 .evo-row-dupla {
-  display: grid; grid-template-columns: 2fr 1fr;
-  gap: 1.5rem; margin-bottom: 1.5rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;   /* Dific. 33% | Gráfico 66% */
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+  align-items: start;
+}
+/* Containers dos gráficos — alturas fixas obrigatórias */
+#chartEvoRadar {
+  height: 240px !important;   /* ← era 300px, agora menor */
+  max-width: 240px;
+  margin: 0 auto;
+}
+#chartEvoComparativo {
+  height: 300px !important;   /* ← era 260px, agora maior */
+}
+
+/* Radar — container com tamanho máximo */
+#chartEvoRadar {
+  max-width: 340px;
+  margin: 0 auto;
+}
+
+/* Mobile */
+@media (max-width: 900px) {
+  /* Mobile: empilhados, radar volta ao tamanho normal */
+  #chartEvoRadar       { height: 240px !important; max-width: 100%; }
+  #chartEvoComparativo { height: 240px !important; }
+}
+@media (max-width: 600px) {
+  #chartEvoRadar       { height: 220px !important; }
+  #chartEvoComparativo { height: 200px !important; }
 }
 @media (max-width: 900px) { .evo-row-dupla { grid-template-columns: 1fr; } }
 .evo-chart-controls { display: flex; align-items: center; gap: .75rem; margin-bottom: 1rem; }
@@ -1134,16 +1202,6 @@
 
   <main class="app-main">
 
-    <!-- ABA: DESEMPENHO (aluno) -->
-    <section class="tab-panel" id="panel-performance">
-      <div class="filter-header"><h3>🔍 Filtrar por TAG</h3></div>
-      <div class="chips-wrap" id="chipsContainer"></div>
-      <div class="chart-block">
-        <h3>📊 Acertos e Erros por TAG de Conteúdo</h3>
-        <div class="chart-wrap"><canvas id="chartPerformance" height="90"></canvas></div>
-      </div>
-    </section>
-
     <!-- ABA: EVOLUÇÃO (aluno) -->
     <section class="tab-panel" id="panel-evolution">
       <div class="chart-block">
@@ -1158,17 +1216,34 @@
 
     <!-- ABA: RESUMO (aluno) -->
     <section class="tab-panel" id="panel-summary">
-      <div class="stats-grid" id="statsGrid"></div>
-      <div class="summary-grid">
-        <div class="chart-block">
-          <h3>🍩 Distribuição Geral</h3>
-          <div class="doughnut-wrap"><canvas id="chartDoughnut" width="260" height="260"></canvas></div>
-        </div>
-        <div class="attention-block" id="attentionBlock">
-          <h3>⚠️ TAGs que precisam de atenção</h3>
-        </div>
+  <div class="stats-grid" id="statsGrid"></div>
+
+  <!-- GRÁFICO DE DESEMPENHO — movido da aba excluída -->
+  <div class="chart-block" style="margin-bottom:1.5rem">
+    <h3>📊 Acertos e Erros por TAG de Conteúdo</h3>
+    <div class="filter-header" style="margin:.75rem 0 .5rem">
+      <h3 style="font-size:.82rem;color:var(--cinza-400);font-weight:500">
+        🔍 Filtrar por TAG
+      </h3>
+    </div>
+    <div class="chips-wrap" id="chipsContainer" style="margin-bottom:1rem"></div>
+    <div class="chart-wrap">
+      <canvas id="chartPerformance"></canvas>
+    </div>
+  </div>
+
+  <div class="summary-grid">
+    <div class="chart-block">
+      <h3>🍩 Distribuição Geral</h3>
+      <div class="doughnut-wrap">
+        <canvas id="chartDoughnut" width="260" height="260"></canvas>
       </div>
-    </section>
+    </div>
+    <div class="attention-block" id="attentionBlock">
+      <h3>⚠️ TAGs que precisam de atenção</h3>
+    </div>
+  </div>
+</section>
 
     <!-- ════ ABA: VISÃO DA TURMA (professor) ════ -->
     <section class="tab-panel" id="panel-turma">
@@ -1297,22 +1372,24 @@
 
     <div class="stats-grid" id="evoStatsGrid"></div>
 
-    <div class="evo-row-dupla">
-      <div class="chart-block">
-        <h3>📈 Evolução por TAG ao Longo do Tempo</h3>
-        <div class="evo-chart-controls">
-          <label>Visualizar:</label>
-          <select id="evoTagFiltro" onchange="atualizarGraficoEvo()">
-            <option value="__all__">Todas as TAGs</option>
-          </select>
-        </div>
-        <canvas id="chartEvoAluno" height="100"></canvas>
-      </div>
-      <div class="evo-dificuldades-block">
-        <h3>🔴 Dificuldades Identificadas</h3>
-        <div id="evoDificuldades"></div>
-      </div>
+    <!-- DEPOIS — Dificuldades vêm PRIMEIRO (ficam à esquerda): -->
+<div class="evo-row-dupla">
+  <div class="evo-dificuldades-block">
+    <h3>🔴 Dificuldades Identificadas</h3>
+    <div id="evoDificuldades"></div>
+  </div>
+
+  <div class="chart-block">
+    <h3>📈 Evolução por TAG ao Longo do Tempo</h3>
+    <div class="evo-chart-controls">
+      <label>Visualizar:</label>
+      <select id="evoTagFiltro" onchange="atualizarGraficoEvo()">
+        <option value="__all__">Todas as TAGs</option>
+      </select>
     </div>
+    <canvas id="chartEvoAluno"></canvas>
+  </div>
+</div>
 
     <div class="evo-row-dupla">
       <div class="chart-block">
@@ -1467,8 +1544,11 @@ const state = {
    UTILITÁRIOS
  */
 function pctCorrect(perf) {
-  const total = perf.correct + perf.wrong;
-  return total === 0 ? 0 : Math.round((perf.correct / total) * 100);
+  if (!perf || perf.correct == null || perf.wrong == null) return 0;
+  const c     = Number(perf.correct) || 0;
+  const w     = Number(perf.wrong)   || 0;
+  const total = c + w;
+  return total === 0 ? 0 : Math.round((c / total) * 100);
 }
 function destroyChart(key) {
   if (state.charts[key]) { state.charts[key].destroy(); delete state.charts[key]; }
@@ -1578,7 +1658,6 @@ function showDashboard() {
   // Limpa COMPLETAMENTE antes de inserir — evita duplicatas
   nav.innerHTML = `
     <div class="nav-tab" data-tab="summary"     data-emoji="📋">📋 Resumo Geral</div>
-    <div class="nav-tab" data-tab="performance" data-emoji="📊">📊 Desempenho por TAG</div>
     <div class="nav-tab" data-tab="evolution"   data-emoji="📈">📈 Evolução Temporal</div>
     <div class="nav-tab" data-tab="calendario"  data-emoji="🗓️">🗓️ Calendário</div>
   `;
@@ -1590,7 +1669,7 @@ function showDashboard() {
   registrarEventosAbas();
   buildChips();
   buildEvoSelect();
-  switchTab('performance');
+  switchTab('summary');
 }
 
 /* 
@@ -1744,15 +1823,38 @@ function renderPerformanceChart() {
     labels: { usePointStyle: true, pointStyle: 'line' },
   },
         tooltip: {
-          callbacks: {
-            footer(items) {
-              const i   = items[0].dataIndex;
-              const pct = Math.round((corrects[i] / totals[i]) * 100);
-              return `📊 % Acerto: ${pct}%  |  Total: ${totals[i]} questões`;
-            },
-          },
-        },
+    callbacks: {
+      // Título do tooltip
+      title: items => items[0]?.label || '',
+
+      // Valor de cada linha
+      // Formata o valor com % e destaque visual
+label: ctx => {
+  const pct    = ctx.parsed.y;
+  const sinal  = pct >= 70 ? '✅' : pct >= 50 ? '🟡' : '🔴';
+  return ` ${ctx.dataset.label}: ${pct}%  ${sinal}`;
+},
+
+      // Rodapé opcional com média do ponto
+      footer: items => {
+        const media = Math.round(
+          items.reduce((s, i) => s + i.parsed.y, 0) / items.length
+        );
+        return `Média neste ponto: ${media}%`;
       },
+    },
+    // Estilo do tooltip
+    backgroundColor: 'rgba(30,41,59,0.95)',
+    titleColor:      '#fff',
+    bodyColor:       '#e2e8f0',
+    footerColor:     '#94a3b8',
+    padding:         12,
+    cornerRadius:    8,
+    displayColors:   true,
+    boxWidth:        10,
+    boxHeight:       10,
+  },
+},
       scales: {
         x: { stacked: true, grid: { display: false } },
         y: {
@@ -1821,12 +1923,71 @@ function renderEvolutionChart() {
     type: 'line',
     data: { labels, datasets },
     options: {
-      responsive: true,
-      interaction: { mode: 'index' },
-      plugins: {
-      legend: legendaResponsiva(),
-        tooltip: { callbacks: { label: ctx => ` ${ctx.dataset.label}: ${ctx.parsed.y}%` } },
+  responsive: true,
+  interaction: {
+    mode:        'index',
+    intersect:   false,   // ← CHAVE: tooltip aparece mesmo sem cursor
+                          //   exatamente em cima do ponto
+    axis:        'x',     // ← captura em toda a coluna vertical
+  },
+  hover: {
+    mode:      'index',
+    intersect: false,     // ← consistente com interaction
+  },
+  plugins: {
+
+    id: 'crosshair',
+    afterDraw(chart) {
+      if (!chart.tooltip._active?.length) return;
+      const ctx  = chart.ctx;
+      const x    = chart.tooltip._active[0].element.x;
+      const yTop = chart.chartArea.top;
+      const yBot = chart.chartArea.bottom;
+      ctx.save();
+      ctx.beginPath();
+      ctx.moveTo(x, yTop);
+      ctx.lineTo(x, yBot);
+      ctx.lineWidth   = 1.5;
+      ctx.strokeStyle = 'rgba(100,116,139,0.4)';
+      ctx.setLineDash([4, 4]);
+      ctx.stroke();
+      ctx.restore();
+    },
+  },
+
+  tooltip: {
+    callbacks: {
+      // Título do tooltip
+      title: items => items[0]?.label || '',
+
+      // Valor de cada linha
+      // Formata o valor com % e destaque visual
+label: ctx => {
+  const pct    = ctx.parsed.y;
+  const sinal  = pct >= 70 ? '✅' : pct >= 50 ? '🟡' : '🔴';
+  return ` ${ctx.dataset.label}: ${pct}%  ${sinal}`;
+},
+
+      // Rodapé opcional com média do ponto
+      footer: items => {
+        const media = Math.round(
+          items.reduce((s, i) => s + i.parsed.y, 0) / items.length
+        );
+        return `Média neste ponto: ${media}%`;
       },
+    },
+    // Estilo do tooltip
+    backgroundColor: 'rgba(30,41,59,0.95)',
+    titleColor:      '#fff',
+    bodyColor:       '#e2e8f0',
+    footerColor:     '#94a3b8',
+    padding:         12,
+    cornerRadius:    8,
+    displayColors:   true,
+    boxWidth:        10,
+    boxHeight:       10,
+  },
+},
       scales: {
   x: {
     grid: { display: false },
@@ -1852,7 +2013,7 @@ function renderEvolutionChart() {
   },
 },
     },
-  });
+  );
 }
 
 /* ABA 3 — Resumo geral */
@@ -2572,23 +2733,35 @@ function renderEvolucaoAluno() {
 }
 
 function renderEvoCards(u) {
-  const pcts     = TAGS.map(tag => pctCorrect(u.performance[tag]));
+  // ── GUARDA: valida todos os dados antes de calcular ────────────
+  const pcts = TAGS.map(tag => {
+    const p = u.performance?.[tag];
+    return p != null ? pctCorrect(p) : 0;
+  });
+
   const media    = Math.round(pcts.reduce((a, b) => a + b, 0) / pcts.length);
   const tagsOk   = pcts.filter(p => p >= state.threshold).length;
-  const tagsCrit = pcts.filter(p => p < 70).length;
-  const evo      = u.evolution;
-  let variacao   = '—';
+  const tagsCrit = pcts.filter(p => p < 70 && !isNaN(p)).length;
+  const evo      = u.evolution || [];
+
+  let variacao = '—';
   if (evo.length >= 2) {
-    const mp = Math.round(Object.values(evo[0].scores).reduce((a,b)=>a+b,0) / TAGS.length);
-    const mu = Math.round(Object.values(evo[evo.length-1].scores).reduce((a,b)=>a+b,0) / TAGS.length);
+    const primeiraScores = TAGS.map(t => Number(evo[0].scores?.[t]) || 0);
+    const ultimaScores   = TAGS.map(t => Number(evo[evo.length-1].scores?.[t]) || 0);
+    const mp = Math.round(primeiraScores.reduce((a,b)=>a+b,0) / TAGS.length);
+    const mu = Math.round(ultimaScores.reduce((a,b)=>a+b,0)   / TAGS.length);
     const d  = mu - mp;
     variacao = (d >= 0 ? '+' : '') + d + 'pts';
   }
-  document.getElementById('evoStatsGrid').innerHTML = `
+
+  const grid = document.getElementById('evoStatsGrid');
+  if (!grid) return;
+
+  grid.innerHTML = `
     <div class="stat-card blue">
       <span class="stat-icon">🎯</span>
       <span class="stat-label">Média Geral</span>
-      <span class="stat-value">${media}%</span>
+      <span class="stat-value">${isNaN(media) ? '—' : media + '%'}</span>
       <span class="stat-sub">média entre as ${TAGS.length} TAGs</span>
     </div>
     <div class="stat-card ${tagsOk === TAGS.length ? '' : 'danger'}">
@@ -2617,35 +2790,124 @@ function renderGraficoEvoAluno(u) {
   const evo    = u.evolution;
   const labels = evo.map(e => e.label);
   const selTag = document.getElementById('evoTagFiltro')?.value || '__all__';
+  const isMobile = window.innerWidth < 600;
+
   const datasets = selTag === '__all__'
     ? TAGS.map((tag, i) => ({
-        label: tag, data: evo.map(e => e.scores[tag]),
-        borderColor: PALETTE[i % PALETTE.length],
+        label:           tag,
+        data:            evo.map(e => e.scores[tag]),
+        borderColor:     PALETTE[i % PALETTE.length],
         backgroundColor: PALETTE[i % PALETTE.length] + '22',
-        borderWidth: 2, pointRadius: 4, tension: 0.35, fill: false,
+        borderWidth: 2, pointRadius: isMobile ? 2 : 4,
+        tension: 0.35, fill: false,
       }))
     : [{
-        label: selTag, data: evo.map(e => e.scores[selTag]),
-        borderColor: COLOR_CORRECT, backgroundColor: COLOR_CORRECT_ALPHA,
-        borderWidth: 3, pointRadius: 6, tension: 0.35, fill: true,
+        label:           selTag,
+        data:            evo.map(e => e.scores[selTag]),
+        borderColor:     COLOR_CORRECT,
+        backgroundColor: COLOR_CORRECT_ALPHA,
+        borderWidth: 3, pointRadius: isMobile ? 3 : 6,
+        tension: 0.35, fill: true,
       }];
+
   const ctx = document.getElementById('chartEvoAluno').getContext('2d');
   state.charts.evoAluno = new Chart(ctx, {
     type: 'line',
     data: { labels, datasets },
     options: {
-      responsive: true,
-      interaction: { mode: 'index' },
+      responsive:          true,
+      maintainAspectRatio: false,    // ← CHAVE: deixa o CSS controlar a altura
+      interaction: { mode: 'index', intersect: false, axis: 'x' },
+      hover:       { mode: 'index', intersect: false },
       plugins: {
-  legend: legendaResponsiva(),
-        tooltip: { callbacks: { label: c => ` ${c.dataset.label}: ${c.parsed.y}%` } },
-      },
-      scales: {
-        x: { grid: { display: false } },
-        y: { min: 0, max: 100, ticks: { callback: v => v + '%' } },
+        legend: {
+          position: isMobile ? 'bottom' : 'top',
+          labels: {
+            usePointStyle: true,
+            pointStyle:    'line',
+            boxWidth:      isMobile ? 20  : 40,
+            font: { size:  isMobile ? 9   : 12 },
+            padding:       isMobile ? 6   : 12,
+          },
+        },
+
+        id: 'crosshair',
+    afterDraw(chart) {
+      if (!chart.tooltip._active?.length) return;
+      const ctx  = chart.ctx;
+      const x    = chart.tooltip._active[0].element.x;
+      const yTop = chart.chartArea.top;
+      const yBot = chart.chartArea.bottom;
+      ctx.save();
+      ctx.beginPath();
+      ctx.moveTo(x, yTop);
+      ctx.lineTo(x, yBot);
+      ctx.lineWidth   = 1.5;
+      ctx.strokeStyle = 'rgba(100,116,139,0.4)';
+      ctx.setLineDash([4, 4]);
+      ctx.stroke();
+      ctx.restore();
+    },
+  },
+
+        tooltip: {
+    callbacks: {
+      // Título do tooltip
+      title: items => items[0]?.label || '',
+
+      // Valor de cada linha
+      // Formata o valor com % e destaque visual
+label: ctx => {
+  const pct    = ctx.parsed.y;
+  const sinal  = pct >= 70 ? '✅' : pct >= 50 ? '🟡' : '🔴';
+  return ` ${ctx.dataset.label}: ${pct}%  ${sinal}`;
+},
+
+      // Rodapé opcional com média do ponto
+      footer: items => {
+        const media = Math.round(
+          items.reduce((s, i) => s + i.parsed.y, 0) / items.length
+        );
+        return `Média neste ponto: ${media}%`;
       },
     },
-  });
+    // Estilo do tooltip
+    backgroundColor: 'rgba(30,41,59,0.95)',
+    titleColor:      '#fff',
+    bodyColor:       '#e2e8f0',
+    footerColor:     '#94a3b8',
+    padding:         12,
+    cornerRadius:    8,
+    displayColors:   true,
+    boxWidth:        10,
+    boxHeight:       10,
+  },
+      },
+      scales: {
+        x: {
+          grid: { display: false },
+          ticks: {
+            font:          { size: isMobile ? 8 : 12 },
+            maxRotation:   45,
+            autoSkip:      true,
+            maxTicksLimit: isMobile ? 3 : 10,
+          },
+        },
+        y: {
+          min: 0, max: 100,
+          title: {
+            display: !isMobile,
+            text:    '% de Acerto',
+          },
+          ticks: {
+            font:          { size: isMobile ? 9 : 12 },
+            callback: v => v + '%',
+            maxTicksLimit: isMobile ? 4 : 6,
+          },
+        },
+      },
+    },
+  );
 }
 
 function atualizarGraficoEvo() {
@@ -2654,25 +2916,34 @@ function atualizarGraficoEvo() {
 }
 
 function renderDificuldades(u) {
+  // ── GUARDA: verifica se performance existe para todas as TAGs ──
   const tagsCrit = TAGS
-    .map(tag => ({ tag, pct: pctCorrect(u.performance[tag]) }))
-    .filter(t => t.pct < 70)
+    .filter(tag  => u.performance?.[tag] != null)        // ← ignora TAGs ausentes
+    .map(tag     => ({ tag, pct: pctCorrect(u.performance[tag]) }))
+    .filter(t    => t.pct < 70 && !isNaN(t.pct))         // ← ignora NaN
     .sort((a, b) => a.pct - b.pct);
+
   const el = document.getElementById('evoDificuldades');
+  if (!el) return;
+
   if (tagsCrit.length === 0) {
     el.innerHTML = `
       <div style="text-align:center;padding:1.5rem 0;color:var(--verde-medio);">
         <div style="font-size:2rem;margin-bottom:.5rem;">🏆</div>
         <p style="font-weight:600;">Nenhuma dificuldade crítica!</p>
-        <p style="font-size:.8rem;color:var(--cinza-400);">Todas as TAGs estão acima de 70%</p>
+        <p style="font-size:.8rem;color:var(--cinza-400);">
+          Todas as TAGs estão acima de 70%
+        </p>
       </div>`;
     return;
   }
+
   el.innerHTML = tagsCrit.map((item, i) => {
     const cor       = item.pct < 50 ? COLOR_WRONG : '#f59e0b';
     const rankClass = ['dific-rank-1','dific-rank-2','dific-rank-3'][i] || 'dific-rank-n';
     const desc      = item.pct < 40 ? 'Nível crítico — reforço urgente'
-                    : item.pct < 55 ? 'Dificuldade acentuada' : 'Abaixo do esperado';
+                    : item.pct < 55 ? 'Dificuldade acentuada'
+                    : 'Abaixo do esperado';
     return `
       <div class="dific-item">
         <div class="dific-rank ${rankClass}">${i + 1}</div>
@@ -2696,20 +2967,28 @@ function renderRadarAluno(u) {
     data: {
       labels: TAGS.map(t => t.replace('BIO_','')),
       datasets: [{
-        label: 'Desempenho atual',
-        data: TAGS.map(tag => pctCorrect(u.performance[tag])),
-        borderColor: COLOR_CORRECT, backgroundColor: COLOR_CORRECT_ALPHA,
+        label:           'Desempenho atual',
+        data:            TAGS.map(tag => pctCorrect(u.performance[tag])),
+        borderColor:     COLOR_CORRECT,
+        backgroundColor: COLOR_CORRECT_ALPHA,
         borderWidth: 2, pointRadius: 4,
       }],
     },
     options: {
-      responsive: true,
+      responsive:          true,
+      maintainAspectRatio: false,   // ← NECESSÁRIO + CSS controla altura
       plugins: { legend: { display: false } },
       scales: {
         r: {
           min: 0, max: 100,
-          ticks: { stepSize: 20, callback: v => v + '%' },
-          pointLabels: { font: { size: 11, weight: '600' } },
+          ticks: {
+            stepSize: 20,
+            callback: v => v + '%',
+            font: { size: window.innerWidth < 600 ? 8 : 11 },
+          },
+          pointLabels: {
+            font: { size: window.innerWidth < 600 ? 9 : 11, weight: '600' },
+          },
         },
       },
     },
@@ -2720,36 +2999,113 @@ function renderComparativo(u) {
   destroyChart('evoComparativo');
   const evo   = u.evolution;
   const bloco = document.getElementById('blocoComparativo');
+
   if (evo.length < 2) {
     bloco.innerHTML = `
       <h3>⚖️ Comparativo — Primeira vs. Última Avaliação</h3>
-      <p style="color:var(--cinza-400);text-align:center;padding:2rem 0;font-style:italic;">
+      <p style="color:var(--cinza-400);text-align:center;
+                padding:2rem 0;font-style:italic;">
         Necessário pelo menos 2 avaliações para o comparativo
       </p>`;
     return;
   }
+
+  // Recria o canvas — evita canvas "sujo" de render anterior
   bloco.innerHTML = `
     <h3>⚖️ Comparativo — Primeira vs. Última Avaliação</h3>
-    <canvas id="chartEvoComparativo" height="120"></canvas>`;
+    <canvas id="chartEvoComparativo"></canvas>`;   // ← SEM height=""
+
+  const isMobile = window.innerWidth < 600;
   const ctx = document.getElementById('chartEvoComparativo').getContext('2d');
+
   state.charts.evoComparativo = new Chart(ctx, {
     type: 'bar',
     data: {
       labels: TAGS.map(t => t.replace('BIO_','')),
       datasets: [
-        { label: '1ª Avaliação',     data: TAGS.map(t => evo[0].scores[t]),              backgroundColor: 'rgba(59,130,246,0.6)', borderRadius: 4 },
-        { label: 'Última Avaliação', data: TAGS.map(t => evo[evo.length-1].scores[t]),   backgroundColor: 'rgba(45,138,86,0.7)',  borderRadius: 4 },
+        {
+          label:           '1ª Avaliação',
+          data:            TAGS.map(t => evo[0].scores[t]),
+          backgroundColor: 'rgba(59,130,246,0.6)',
+          borderRadius: 4,
+        },
+        {
+          label:           'Última Avaliação',
+          data:            TAGS.map(t => evo[evo.length-1].scores[t]),
+          backgroundColor: 'rgba(45,138,86,0.7)',
+          borderRadius: 4,
+        },
       ],
     },
     options: {
-      responsive: true,
+      responsive:          true,
+      maintainAspectRatio: false,   // ← NECESSÁRIO + CSS controla altura
       interaction: { mode: 'index' },
       plugins: {
-        legend: legendaResponsiva(),
+        legend: {
+          position: 'top',
+          labels: {
+            usePointStyle: true,
+            pointStyle:    'line',
+            font: { size:  isMobile ? 9 : 12 },
+            boxWidth:      isMobile ? 20 : 40,
+          },
+        },
       },
+
+      plugins: {
+  tooltip: {
+    callbacks: {
+      // Título do tooltip
+      title: items => items[0]?.label || '',
+
+      // Valor de cada linha
+      // Formata o valor com % e destaque visual
+label: ctx => {
+  const pct    = ctx.parsed.y;
+  const sinal  = pct >= 70 ? '✅' : pct >= 50 ? '🟡' : '🔴';
+  return ` ${ctx.dataset.label}: ${pct}%  ${sinal}`;
+},
+
+      // Rodapé opcional com média do ponto
+      footer: items => {
+        const media = Math.round(
+          items.reduce((s, i) => s + i.parsed.y, 0) / items.length
+        );
+        return `Média neste ponto: ${media}%`;
+      },
+    },
+    // Estilo do tooltip
+    backgroundColor: 'rgba(30,41,59,0.95)',
+    titleColor:      '#fff',
+    bodyColor:       '#e2e8f0',
+    footerColor:     '#94a3b8',
+    padding:         12,
+    cornerRadius:    8,
+    displayColors:   true,
+    boxWidth:        10,
+    boxHeight:       10,
+  },
+},
+
       scales: {
-        x: { grid: { display: false } },
-        y: { min: 0, max: 100, ticks: { callback: v => v + '%' } },
+        x: {
+          grid: { display: false },
+          ticks: {
+            font:          { size: isMobile ? 8 : 11 },
+            maxRotation:   isMobile ? 45 : 0,
+            autoSkip:      true,
+            maxTicksLimit: isMobile ? 5 : 10,
+          },
+        },
+        y: {
+          min: 0, max: 100,
+          ticks: {
+            callback:      v => v + '%',
+            font:          { size: isMobile ? 9 : 11 },
+            maxTicksLimit: isMobile ? 4 : 6,
+          },
+        },
       },
     },
   });
