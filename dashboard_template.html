@@ -6,6 +6,10 @@
   <title>BioTrack — Dashboard Educacional</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+  <!-- Adicionar antes de </head> -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+ 
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -1035,17 +1039,37 @@
 }
 
 /* ── Modal de evento ── */
+/* DEPOIS: */
 .cal-modal-overlay {
   position: fixed; inset: 0;
-  background: rgba(0,0,0,.45); z-index: 1000;
+  background: rgba(0,0,0,.45);
+  z-index: 1000;
   display: flex; align-items: center; justify-content: center;
   padding: 1rem; animation: fadeIn .2s ease;
+  /* Garante que filhos com position possam ultrapassar a overlay */
+  isolation: isolate;
 }
+
+/* O modal em si sobe acima da overlay */
+.cal-modal {
+  position: relative;
+  z-index: 1001;               /* ← 1 acima da overlay */
+}
+/* DEPOIS: */
 .cal-modal {
   background: var(--branco); border-radius: var(--radius);
   box-shadow: var(--sombra-lg); width: 100%; max-width: 520px;
-  max-height: 90vh; overflow-y: auto;
+  max-height: 90vh;
+  overflow-y: auto;
+  overflow-x: visible;         /* ← permite que o datepicker extravase */
+  isolation: auto;             /* ← remove stacking context isolado */
   animation: slideUp .25s ease;
+}
+
+/* Garante que o body do modal não corte o popup nativo */
+.cal-modal-body {
+  padding: 1.5rem;
+  overflow: visible;           /* ← CRÍTICO: sem isso o datepicker fica preso */
 }
 .cal-modal-header {
   display: flex; align-items: center; justify-content: space-between;
@@ -1148,6 +1172,7 @@
 }
 
   </style>
+  
 </head>
 <body>
 
@@ -3180,17 +3205,73 @@ const TIPOS_EVENTO = {
   outro:    { label: 'Outro',    emoji: '📌', classe: 'cal-evt-outro'    },
 };
 
-/* ── Persistência ─────────────────────────────── */
-function calCarregarEventos() {
-  try {
-    return JSON.parse(localStorage.getItem('biotrack_eventos') || '[]');
-  } catch { return []; }
-}
-function calSalvarEventos(eventos) {
-  localStorage.setItem('biotrack_eventos', JSON.stringify(eventos));
-}
+/* ── Firebase: inicialização ─────────────────── */
+const firebaseConfig = {
+  apiKey:            "AIzaSyCW-3qaWZ-beQD8lb8RDadjIKr_rNJt9mo",
+  authDomain:        "biotrack-4e73f.firebaseapp.com",
+  projectId:         "biotrack-4e73f",
+  storageBucket:     "biotrack-4e73f.firebasestorage.app",
+  messagingSenderId: "1067898044758",
+  appId:             "1:1067898044758:web:baf67da05bc27e9d5f96f7",
+};
+firebase.initializeApp(firebaseConfig);
+const db          = firebase.firestore();
+const EVENTOS_REF = db.collection('biotrack_eventos');
+
+// ← LINHA QUE ESTAVA FALTANDO — adicione aqui:
 function calGerarId() {
   return `evt_${Date.now()}_${Math.random().toString(36).slice(2,7)}`;
+}
+
+/* ── Persistência via Firestore ──────────────── */
+async function calCarregarEventos() {
+  try {
+    const snap    = await EVENTOS_REF.orderBy('data').get();
+    const eventos = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    // Salva cache local como backup offline
+    localStorage.setItem('biotrack_eventos_cache', JSON.stringify(eventos));
+    return eventos;
+  } catch (e) {
+    console.warn('Firestore indisponível, usando cache local:', e);
+    return JSON.parse(
+      localStorage.getItem('biotrack_eventos_cache') || '[]'
+    );
+  }
+}
+async function calSalvarEventoRemoto(evento) {
+  const { id, ...dados } = evento;
+  await EVENTOS_REF.doc(id).set(dados);
+  // Atualiza cache local também
+  const cache = JSON.parse(
+    localStorage.getItem('biotrack_eventos_cache') || '[]'
+  );
+  const idx = cache.findIndex(e => e.id === id);
+  if (idx !== -1) cache[idx] = evento; else cache.push(evento);
+  localStorage.setItem('biotrack_eventos_cache', JSON.stringify(cache));
+}
+/* ── Deletar evento ───────────────────────────── */
+async function calDeletarEvento(id) {
+  if (!confirm('Deseja excluir este evento permanentemente?')) return;
+  calFecharModal();
+  try {
+    // Deleta no Firebase ← CORRETO
+    await EVENTOS_REF.doc(id).delete();
+
+    // Atualiza cache local
+    const cache = JSON.parse(
+      localStorage.getItem('biotrack_eventos_cache') || '[]'
+    );
+    localStorage.setItem('biotrack_eventos_cache',
+      JSON.stringify(cache.filter(e => e.id !== id))
+    );
+
+    calRenderizarGrid();
+    calRenderizarAgenda();
+
+  } catch (e) {
+    console.error('Erro ao excluir evento:', e);
+    alert('Erro ao excluir: ' + (e.message || 'Verifique sua conexão.'));
+  }
 }
 
 /* ── Navegação do mês ─────────────────────────── */
@@ -3209,20 +3290,26 @@ function calIrHoje() {
 }
 
 /* ── Ponto de entrada da aba ─────────────────── */
-function renderCalendario() {
+async function renderCalendario() {
   const isProfessor = state.perfil === 'professor';
   const addBtn      = document.getElementById('calAddBtn');
   if (addBtn) addBtn.style.display = isProfessor ? 'flex' : 'none';
-  calRenderizarGrid();
-  calRenderizarAgenda();
+
+  if (!window._calSyncAtivo) {
+    iniciarSyncCalendario();
+    window._calSyncAtivo = true;
+  }
+
+  // await garante que o grid renderiza ANTES de retornar
+  await calRenderizarGrid();
+  await calRenderizarAgenda();
 }
 
 /* ── Grid mensal ─────────────────────────────── */
-function calRenderizarGrid() {
+async function calRenderizarGrid() {
   document.getElementById('calMesAno').textContent =
     `${MESES_PT[CAL.mes]} ${CAL.ano}`;
-
-  const eventos       = calCarregarEventos();
+  const eventos = await calCarregarEventos();   // ← await aqui
   const primeiroDia   = new Date(CAL.ano, CAL.mes, 1).getDay();
   const ultimoDia     = new Date(CAL.ano, CAL.mes + 1, 0).getDate();
   const ultimoMesAnt  = new Date(CAL.ano, CAL.mes, 0).getDate();
@@ -3293,8 +3380,8 @@ function calRenderizarGrid() {
 }
 
 /* ── Agenda lateral ──────────────────────────── */
-function calRenderizarAgenda() {
-  const eventos = calCarregarEventos();
+async function calRenderizarAgenda() {
+  const eventos = await calCarregarEventos();   // ← await aqui
   const hoje    = new Date();
   hoje.setHours(0,0,0,0);
 
@@ -3338,12 +3425,12 @@ function calRenderizarAgenda() {
 }
 
 /* ── Modal: Novo / Editar evento (professor) ── */
-function calAbrirModal(dataPreenchida = '', eventoId = null) {
+async function calAbrirModal(dataPreenchida = '', eventoId = null) {
   if (state.perfil !== 'professor') return;
-
   let evento = null;
   if (eventoId) {
-    evento       = calCarregarEventos().find(e => e.id === eventoId);
+    const todos    = await calCarregarEventos();
+    evento         = todos.find(e => e.id === eventoId) || null;
     CAL.eventoEdit = evento;
   } else {
     CAL.eventoEdit = null;
@@ -3374,24 +3461,33 @@ function calAbrirModal(dataPreenchida = '', eventoId = null) {
         <input id="calFTitulo" type="text" placeholder="Ex: Simulado Bimestral"
                value="${titulo}" maxlength="60" />
       </div>
-      <div class="cal-form-row">
+            <div class="cal-form-row">
         <div class="cal-form-group">
           <label>Tipo *</label>
           <select id="calFTipo">${opcoesTipo}</select>
         </div>
         <div class="cal-form-group">
-          <label>Data *</label>
-          <input id="calFData" type="date" value="${data}" />
-        </div>
-      </div>
-      <div class="cal-form-row">
-        <div class="cal-form-group">
           <label>Hora Início</label>
           <input id="calFHoraIni" type="time" value="${horaIni}" />
         </div>
+      </div>
+
+      <!-- Data em linha própria — evita ser cortada pelo grid -->
+      <div class="cal-form-group">
+        <label>Data *</label>
+        <input id="calFData" type="date" value="${data}"
+               style="width:100%;position:relative;z-index:9999;" />
+      </div>
+
+      <div class="cal-form-row">
         <div class="cal-form-group">
           <label>Hora Fim</label>
           <input id="calFHoraFim" type="time" value="${horaFim}" />
+        </div>
+        <div class="cal-form-group">
+          <label>Local</label>
+          <input id="calFLocal" type="text"
+                 placeholder="Ex: Sala 12..." value="${local}" />
         </div>
       </div>
       <div class="cal-form-group">
@@ -3421,11 +3517,109 @@ function calAbrirModal(dataPreenchida = '', eventoId = null) {
   setTimeout(() => document.getElementById('calFTitulo').focus(), 100);
 }
 
+
+/* ── Salvar evento ────────────────────────────── */
+async function calSalvarEvento() {
+  const titulo    = document.getElementById('calFTitulo').value.trim();
+  const data      = document.getElementById('calFData').value;
+  const tipo      = document.getElementById('calFTipo').value;
+  const horaIni   = document.getElementById('calFHoraIni').value;
+  const horaFim   = document.getElementById('calFHoraFim').value;
+  const local     = document.getElementById('calFLocal').value.trim();
+  const descricao = document.getElementById('calFDesc').value.trim();
+
+  if (!titulo) {
+    document.getElementById('calFTitulo').style.borderColor = 'var(--vermelho)';
+    document.getElementById('calFTitulo').focus();
+    return;
+  }
+  if (!data) {
+    document.getElementById('calFData').style.borderColor = 'var(--vermelho)';
+    document.getElementById('calFData').focus();
+    return;
+  }
+
+  // Feedback visual
+  const btn = document.querySelector('.cal-btn-salvar');
+  btn.textContent = '⏳ Salvando...';
+  btn.disabled    = true;
+
+  try {
+    // Se for edição → reutiliza o ID existente
+    // Se for criação → gera ID novo
+    const id     = CAL.eventoEdit?.id || calGerarId();
+    const evento = {
+      id, titulo, tipo, data,
+      horaInicio:   horaIni,
+      horaFim,      local,    descricao,
+      criadoPor:    CAL.eventoEdit?.criadoPor || state.user?.name || 'Professor',
+      criadoEm:     CAL.eventoEdit?.criadoEm  || Date.now(),
+      atualizadoEm: Date.now(),
+    };
+
+    // Salva no Firebase ← CORRETO
+    const { id: docId, ...dados } = evento;
+    await EVENTOS_REF.doc(docId).set(dados, { merge: true });
+
+    // Atualiza cache local como backup
+    const cache = JSON.parse(
+      localStorage.getItem('biotrack_eventos_cache') || '[]'
+    );
+    const idx = cache.findIndex(e => e.id === id);
+    if (idx !== -1) cache[idx] = evento;
+    else cache.push(evento);
+    localStorage.setItem('biotrack_eventos_cache', JSON.stringify(cache));
+
+    calFecharModal();
+    calRenderizarGrid();
+    calRenderizarAgenda();
+
+  } catch (e) {
+    console.error('Erro ao salvar evento:', e);
+    btn.textContent = CAL.eventoEdit ? 'Salvar Alterações' : '✓ Criar Evento';
+    btn.disabled    = false;
+    alert('Erro ao salvar: ' + (e.message || 'Verifique sua conexão.'));
+  }
+}
+
+/* ── Persistência remota (Firestore) ─────────── */
+async function calSalvarEventoRemoto(evento) {
+  const { id, ...dados } = evento;
+  await EVENTOS_REF.doc(id).set(dados, { merge: true });
+  // Atualiza cache local como backup offline
+  const cache = JSON.parse(
+    localStorage.getItem('biotrack_eventos_cache') || '[]'
+  );
+  const idx = cache.findIndex(e => e.id === id);
+  if (idx !== -1) cache[idx] = evento;
+  else cache.push(evento);
+  localStorage.setItem('biotrack_eventos_cache', JSON.stringify(cache));
+}
+
+async function calDeletarEventoRemoto(id) {
+  await EVENTOS_REF.doc(id).delete();
+  const cache = JSON.parse(
+    localStorage.getItem('biotrack_eventos_cache') || '[]'
+  );
+  localStorage.setItem('biotrack_eventos_cache',
+    JSON.stringify(cache.filter(e => e.id !== id))
+  );
+}
+
 /* ── Modal: Ver detalhes (aluno e professor) ── */
-function calVerEvento(id, evt) {
+/* ── Modal: Ver detalhes (aluno e professor) ── */
+async function calVerEvento(id, evt) {
   if (evt) evt.stopPropagation();
-  const evento = calCarregarEventos().find(e => e.id === id);
-  if (!evento) return;
+
+  // await obrigatório — calCarregarEventos() é async ✅
+  const eventos = await calCarregarEventos();
+  const evento  = eventos.find(e => e.id === id);
+
+  if (!evento) {
+    console.warn('calVerEvento: evento não encontrado →', id);
+    return;
+  }
+
   const tipo = TIPOS_EVENTO[evento.tipo] || TIPOS_EVENTO.outro;
   const dt   = new Date(evento.data + 'T00:00:00');
   const hora = evento.horaInicio
@@ -3442,15 +3636,16 @@ function calVerEvento(id, evt) {
         ${tipo.emoji} ${tipo.label}
       </span>
       <h2 style="font-size:1.15rem;font-weight:700;
-                 margin-bottom:1.25rem;color:var(--cinza-900)">
+                 margin:0.75rem 0 1.25rem;color:var(--cinza-900)">
         ${evento.titulo}
       </h2>
       <div class="cal-det-row">
         <span class="cal-det-icone">📅</span>
         <span class="cal-det-label">Data</span>
         <span class="cal-det-valor">
-          ${dt.toLocaleDateString('pt-BR', {weekday:'long',day:'numeric',
-            month:'long',year:'numeric'})}
+          ${dt.toLocaleDateString('pt-BR',
+            {weekday:'long', day:'numeric',
+             month:'long', year:'numeric'})}
         </span>
       </div>
       <div class="cal-det-row">
@@ -3487,63 +3682,6 @@ function calVerEvento(id, evt) {
     </div>
   `;
   document.getElementById('calModalOverlay').style.display = 'flex';
-}
-
-/* ── Salvar evento ────────────────────────────── */
-function calSalvarEvento() {
-  const titulo   = document.getElementById('calFTitulo').value.trim();
-  const data     = document.getElementById('calFData').value;
-  const tipo     = document.getElementById('calFTipo').value;
-  const horaIni  = document.getElementById('calFHoraIni').value;
-  const horaFim  = document.getElementById('calFHoraFim').value;
-  const local    = document.getElementById('calFLocal').value.trim();
-  const descricao= document.getElementById('calFDesc').value.trim();
-
-  // Validação mínima
-  if (!titulo) {
-    document.getElementById('calFTitulo').style.borderColor = 'var(--vermelho)';
-    document.getElementById('calFTitulo').focus();
-    return;
-  }
-  if (!data) {
-    document.getElementById('calFData').style.borderColor = 'var(--vermelho)';
-    document.getElementById('calFData').focus();
-    return;
-  }
-
-  const eventos = calCarregarEventos();
-
-  if (CAL.eventoEdit) {
-    // Editar existente
-    const idx = eventos.findIndex(e => e.id === CAL.eventoEdit.id);
-    if (idx !== -1) {
-      eventos[idx] = { ...eventos[idx], titulo, tipo, data,
-                       horaInicio: horaIni, horaFim, local, descricao };
-    }
-  } else {
-    // Novo evento
-    eventos.push({
-      id: calGerarId(), titulo, tipo, data,
-      horaInicio: horaIni, horaFim, local, descricao,
-      criadoPor: state.user?.name || 'Professor',
-      criadoEm:  Date.now(),
-    });
-  }
-
-  calSalvarEventos(eventos);
-  calFecharModal();
-  calRenderizarGrid();
-  calRenderizarAgenda();
-}
-
-/* ── Deletar evento ───────────────────────────── */
-function calDeletarEvento(id) {
-  if (!confirm('Deseja excluir este evento permanentemente?')) return;
-  const eventos = calCarregarEventos().filter(e => e.id !== id);
-  calSalvarEventos(eventos);
-  calFecharModal();
-  calRenderizarGrid();
-  calRenderizarAgenda();
 }
 
 /* ── Fechar modal ─────────────────────────────── */
