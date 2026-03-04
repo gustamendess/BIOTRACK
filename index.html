@@ -228,6 +228,37 @@
     .chart-block {
       background: var(--branco); border-radius: var(--radius);
       padding: 1.5rem; box-shadow: var(--sombra-sm); margin-bottom: 1.5rem;
+
+      .chart-block { position: relative; }  /* ← necessário para Chart.js */
+
+/* Container do canvas — controla a altura responsiva */
+.chart-wrap {
+  position: relative;
+  width:    100%;
+}
+
+@media (max-width: 600px) {
+  /* Gráfico de barras (performance) */
+  #chartPerformance { max-height: 220px !important; }
+
+  /* Gráfico de linha (evolução) */
+  #chartEvolution   { max-height: 240px !important; }
+
+  /* Gráfico de evolução do aluno */
+  #chartEvoAluno    { max-height: 220px !important; }
+
+  /* Radar */
+  #chartEvoRadar    { max-height: 200px !important; }
+
+  /* Comparativo */
+  #chartEvoComparativo { max-height: 200px !important; }
+
+  /* Doughnut */
+  #chartDoughnut    { max-height: 220px !important; }
+
+  /* Média da turma */
+  #chartMediaTurma  { max-height: 200px !important; }
+}
     }
     .chart-block h3 {
       font-size: 1rem; font-weight: 600; color: var(--cinza-900);
@@ -1028,6 +1059,25 @@
 .cal-det-label { color: var(--cinza-400); min-width: 70px; font-weight: 500; }
 .cal-det-valor { color: var(--cinza-900); font-weight: 600; flex: 1; }
 
+/* Alturas padrão dos containers — desktop */
+#chartPerformance    { height: 320px; }
+#chartEvolution      { height: 320px; }
+#chartEvoAluno       { height: 280px; }
+#chartEvoRadar       { height: 300px; }
+#chartEvoComparativo { height: 260px; }
+#chartDoughnut       { height: 260px; }
+#chartMediaTurma     { height: 280px; }
+
+/* Mobile — alturas reduzidas */
+@media (max-width: 600px) {
+  #chartPerformance    { height: 220px; }
+  #chartEvolution      { height: 240px; }
+  #chartEvoAluno       { height: 220px; }
+  #chartEvoRadar       { height: 200px; }
+  #chartEvoComparativo { height: 200px; }
+  #chartDoughnut       { height: 220px; }
+  #chartMediaTurma     { height: 200px; }
+}
 
   </style>
 </head>
@@ -1898,10 +1948,20 @@ const COLOR_WRONG         = '#e53e3e';
 const PALETTE = ['#2d8a56','#3b82f6','#f59e0b','#8b5cf6','#ec4899',
                  '#14b8a6','#f97316','#6366f1','#a3e635','#ef4444'];
 
-// Ajuste global Chart.js para mobile
-Chart.defaults.font.size = window.innerWidth < 600 ? 10 : 12;
-Chart.defaults.plugins.legend.labels.boxWidth =
-  window.innerWidth < 600 ? 10 : 40;
+// ── Configuração global Chart.js para mobile ────────────────
+const IS_MOBILE = window.innerWidth < 600;
+
+Chart.defaults.responsive             = true;
+Chart.defaults.maintainAspectRatio    = false;  // ← CHAVE: deixa o CSS controlar a altura
+Chart.defaults.font.size              = IS_MOBILE ? 10 : 12;
+Chart.defaults.plugins.legend.labels.boxWidth = IS_MOBILE ? 15 : 40;
+
+// Recalcula ao rotacionar a tela
+window.addEventListener('resize', () => {
+  Object.values(state.charts).forEach(chart => {
+    if (chart && typeof chart.resize === 'function') chart.resize();
+  });
+});
 
 /* 
    ESTADO GLOBAL
@@ -2029,9 +2089,9 @@ function showDashboard() {
 
   // Limpa COMPLETAMENTE antes de inserir — evita duplicatas
   nav.innerHTML = `
+    <div class="nav-tab" data-tab="summary"     data-emoji="📋">📋 Resumo Geral</div>
     <div class="nav-tab" data-tab="performance" data-emoji="📊">📊 Desempenho por TAG</div>
     <div class="nav-tab" data-tab="evolution"   data-emoji="📈">📈 Evolução Temporal</div>
-    <div class="nav-tab" data-tab="summary"     data-emoji="📋">📋 Resumo Geral</div>
     <div class="nav-tab" data-tab="calendario"  data-emoji="🗓️">🗓️ Calendário</div>
   `;
 
@@ -2228,6 +2288,22 @@ function buildEvoSelect() {
   });
 }
 
+// Gera opções de legenda responsiva
+function legendaResponsiva() {
+  const isMobile = window.innerWidth < 600;
+  return {
+    position: isMobile ? 'bottom' : 'top',
+    align:    'start',
+    labels: {
+      usePointStyle: true,
+      pointStyle:    'line',
+      boxWidth:      isMobile ? 20 : 40,
+      font: { size:  isMobile ? 9  : 12 },
+      padding:       isMobile ? 6  : 12,
+    },
+  };
+}
+
 function renderEvolutionChart() {
   destroyChart('evolution');
   const evo    = state.user.evolution;
@@ -2260,20 +2336,33 @@ function renderEvolutionChart() {
       responsive: true,
       interaction: { mode: 'index' },
       plugins: {
-  legend: {
-    position: 'top',
-    labels: { usePointStyle: true, pointStyle: 'line' },
-  },
+      legend: legendaResponsiva(),
         tooltip: { callbacks: { label: ctx => ` ${ctx.dataset.label}: ${ctx.parsed.y}%` } },
       },
       scales: {
-        x: { grid: { display: false } },
-        y: {
-          min: 0, max: 100,
-          title: { display: true, text: '% de Acerto', font: { size: 12 } },
-          ticks: { callback: v => v + '%' },
-        },
-      },
+  x: {
+    grid: { display: false },
+    ticks: {
+      font:     { size: window.innerWidth < 600 ? 8 : 12 },
+      maxRotation: 45,    // ← labels inclinam 45° em mobile
+      minRotation: 0,
+      autoSkip:    true,  // ← pula labels que não cabem
+      maxTicksLimit: window.innerWidth < 600 ? 3 : 10,
+    },
+  },
+  y: {
+    min: 0, max: 100,
+    title: {
+      display: window.innerWidth >= 600,  // ← esconde título do eixo em mobile
+      text: '% de Acerto', font: { size: 12 },
+    },
+    ticks: {
+      font:          { size: window.innerWidth < 600 ? 9 : 12 },
+      callback: v => v + '%',
+      maxTicksLimit: window.innerWidth < 600 ? 4 : 6,
+    },
+  },
+},
     },
   });
 }
@@ -3060,10 +3149,7 @@ function renderGraficoEvoAluno(u) {
       responsive: true,
       interaction: { mode: 'index' },
       plugins: {
-  legend: {
-    position: 'top',
-    labels: { usePointStyle: true, pointStyle: 'line' },
-  },
+  legend: legendaResponsiva(),
         tooltip: { callbacks: { label: c => ` ${c.dataset.label}: ${c.parsed.y}%` } },
       },
       scales: {
@@ -3171,11 +3257,8 @@ function renderComparativo(u) {
       responsive: true,
       interaction: { mode: 'index' },
       plugins: {
-  legend: {
-    position: 'top',
-    labels: { usePointStyle: true, pointStyle: 'line' },
-  },
-},
+        legend: legendaResponsiva(),
+      },
       scales: {
         x: { grid: { display: false } },
         y: { min: 0, max: 100, ticks: { callback: v => v + '%' } },
