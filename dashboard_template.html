@@ -4,6 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>BioTrack — Dashboard Educacional</title>
+
+  <!-- Favicon → ícone na aba do navegador -->
+  <link rel="icon" type="image/png" href="logo.png" />
+
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
   <!-- Adicionar antes de </head> -->
@@ -152,6 +156,18 @@
     }
     .header-brand { display: flex; align-items: center; gap: .6rem; }
     .header-brand .icon { font-size: 1.5rem; }
+    .header-logo-img {
+  width:         32px;
+  height:        32px;
+  object-fit:    contain;   /* mantém proporção sem distorcer */
+  border-radius: 4px;       /* remove se quiser sem borda arredondada */
+}
+.login-logo-img {
+  width:         80px;
+  height:        80px;
+  object-fit:    contain;
+  margin-bottom: .5rem;
+}
     .header-brand h2 { font-size: 1.1rem; font-weight: 700; }
     .header-user { display: flex; align-items: center; gap: .75rem; }
     .user-avatar {
@@ -1213,10 +1229,10 @@
 <div id="loginScreen">
   <div class="login-card">
     <div class="login-logo">
-      <div class="icon">🧬</div>
-      <h1>BioTrack</h1>
-      <p>Dashboard Educacional de Biologia</p>
-    </div>
+  <img src="logo.png" alt="BioTrack" class="login-logo-img" />
+  <h1>BioTrack</h1>
+  <p>Dashboard Educacional de Biologia</p>
+</div>
 
     <div class="login-error" id="loginError">❌ Usuário ou senha incorretos.</div>
 
@@ -1245,9 +1261,11 @@
 <div id="appScreen">
   <header class="app-header" id="appHeader">
     <div class="header-brand">
-      <span class="icon">🧬</span>
-      <h2>BioTrack</h2>
-    </div>
+  <img src="logo.png"
+       alt="BioTrack"
+       class="header-logo-img" />
+  <h2>BioTrack</h2>
+</div>
     <div class="header-user">
       <div class="user-avatar" id="userAvatar">A</div>
       <span class="user-name" id="userNameDisplay">Aluno</span>
