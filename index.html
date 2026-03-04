@@ -960,6 +960,18 @@
   cursor: default; transition: background var(--transition);
   position: relative;
 }
+@media (max-width: 600px) {
+  .cal-dia {
+    min-height: 48px;
+    padding:    .2rem;
+    overflow:   hidden;    /* impede qualquer coisa de sair ✅ */
+  }
+  .cal-dia-num {
+    font-size: .68rem;
+    width:     18px;
+    height:    18px;
+  }
+}
 .cal-dia:nth-child(7n) { border-right: none; }
 .cal-dia:hover { background: var(--cinza-100); }
 .cal-dia.outro-mes { background: var(--cinza-100); }
@@ -988,6 +1000,27 @@
   transition: opacity var(--transition);
 }
 .cal-evt-chip:hover { opacity: .8; }
+/* ── Mobile: chip vira bolinha com só o emoji ── */
+@media (max-width: 600px) {
+  .cal-evt-chip {
+    font-size:       0;           /* esconde o texto */
+    padding:         .15rem;
+    border-radius:   50%;         /* vira bolinha */
+    width:           1.4rem;
+    height:          1.4rem;
+    display:         flex;
+    align-items:     center;
+    justify-content: center;
+    margin-bottom:   .2rem;
+  }
+  .cal-evt-chip .chip-emoji {
+    font-size: .85rem;            /* mostra só o emoji */
+    display:   block;
+  }
+  .cal-evt-chip .chip-texto {
+    display: none;                /* esconde o texto */
+  }
+}
 .cal-evt-aula     { background: #dbeafe; color: #1d4ed8; }
 .cal-evt-simulado { background: #fce7f3; color: #9d174d; }
 .cal-evt-reforco  { background: #dcfce7; color: #166534; }
@@ -3851,14 +3884,15 @@ async function calRenderizarGrid() {
     const LIMITE  = 2;
     let   chipsHtml = '';
     evtsDia.slice(0, LIMITE).forEach(e => {
-      const tipo = TIPOS_EVENTO[e.tipo] || TIPOS_EVENTO.outro;
-      chipsHtml += `
-        <span class="cal-evt-chip ${tipo.classe}"
-              onclick="calVerEvento('${e.id}', event)"
-              title="${e.titulo}">
-          ${tipo.emoji} ${e.titulo}
-        </span>`;
-    });
+  const tipo = TIPOS_EVENTO[e.tipo] || TIPOS_EVENTO.outro;
+  chipsHtml += `
+    <span class="cal-evt-chip ${tipo.classe}"
+          onclick="calVerEvento('${e.id}', event)"
+          title="${e.titulo}">
+      <span class="chip-emoji">${tipo.emoji}</span>
+      <span class="chip-texto">${e.titulo}</span>
+    </span>`;
+});
     if (evtsDia.length > LIMITE) {
       chipsHtml += `<span class="cal-mais"
                          onclick="calVerDia('${dataStr}', event)">
