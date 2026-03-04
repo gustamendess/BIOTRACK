@@ -197,7 +197,7 @@
     .nav-tab.prof-tab:hover { color: var(--azul); }
     .nav-tab.prof-tab.active { color: #1d4ed8; border-bottom-color: var(--azul); }
 
-    .app-main { flex: 1; padding: 1.5rem; max-width: 1300px; margin: 0 auto; width: 100%; }
+    .app-main { flex: 1; padding: 1.5rem 1.5rem 3rem; max-width: 1300px; margin: 0 auto; width: 100%; min-height: calc(100vh - 64px - 48px); }
 
     .tab-panel { display: none; }
     .tab-panel.active { display: block; animation: fadeIn .25s ease; }
@@ -329,30 +329,87 @@
     .cell-warn   { background: #fef9c3; color: #854d0e; }
     .cell-danger { background: #fee2e2; color: #991b1b; }
 
-    /* Heatmap */
-    .heatmap-wrap {
-      background: var(--branco); border-radius: var(--radius);
-      box-shadow: var(--sombra-sm); overflow: hidden; margin-bottom: 1.5rem;
-    }
-    .heatmap-wrap h3 { font-size: 1rem; font-weight: 600; padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--cinza-200); }
-    .heatmap-scroll { overflow-x: auto; }
+    /* ── PAINEL DE PRIORIDADES ── */
+.prio-wrap {
+  margin-bottom: 1.5rem;
+}
+.prio-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+}
+.prio-card {
+  background: var(--branco);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  box-shadow: var(--sombra-sm);
+  border-top: 4px solid transparent;
+}
+.prio-card h4 {
+  font-size: .95rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: var(--cinza-900);
+}
+.prio-danger  { border-top-color: var(--vermelho); }
+.prio-success { border-top-color: var(--verde-medio); }
+.prio-gold    { border-top-color: #f59e0b; }
 
-    table.heatmap-table { width: 100%; border-collapse: collapse; font-size: .82rem; }
-    .heatmap-table th {
-      padding: .6rem .75rem; font-size: .72rem; font-weight: 600;
-      text-transform: uppercase; letter-spacing: .03em; color: var(--cinza-700);
-      background: var(--cinza-100); border-bottom: 1px solid var(--cinza-200);
-      white-space: nowrap;
-    }
-    .heatmap-table td {
-      padding: .55rem .6rem; border-bottom: 1px solid rgba(0,0,0,.04);
-      text-align: center; font-weight: 600; font-size: .8rem;
-    }
-    .heatmap-table .td-aluno-nome {
-      text-align: left; font-weight: 600; min-width: 140px;
-      padding-left: 1rem; color: var(--cinza-900);
-    }
-    .heatmap-table tr:last-child td { border-bottom: none; }
+.prio-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: .6rem 0;
+  border-bottom: 1px solid var(--cinza-200);
+  gap: .5rem;
+}
+.prio-item:last-child { border-bottom: none; }
+
+.prio-nome {
+  font-weight: 600;
+  font-size: .85rem;
+  color: var(--cinza-900);
+  flex: 1;
+}
+.prio-tag {
+  font-size: .75rem;
+  color: var(--cinza-400);
+  font-weight: 500;
+}
+.prio-badge-queda {
+  background: #fee2e2;
+  color: #991b1b;
+  font-size: .75rem;
+  font-weight: 700;
+  padding: .2rem .5rem;
+  border-radius: 6px;
+  white-space: nowrap;
+}
+.prio-badge-ganho {
+  background: #dcfce7;
+  color: #166534;
+  font-size: .75rem;
+  font-weight: 700;
+  padding: .2rem .5rem;
+  border-radius: 6px;
+  white-space: nowrap;
+}
+.prio-badge-gold {
+  background: #fef9c3;
+  color: #854d0e;
+  font-size: .75rem;
+  font-weight: 700;
+  padding: .2rem .5rem;
+  border-radius: 6px;
+  white-space: nowrap;
+}
+.prio-vazio {
+  font-size: .85rem;
+  color: var(--cinza-400);
+  text-align: center;
+  padding: 1rem 0;
+  font-style: italic;
+}
 
     /* Threshold slider */
     .threshold-row {
@@ -381,13 +438,597 @@
     }
     .media-turma-block h3 { font-size: 1rem; font-weight: 600; margin-bottom: 1rem; }
 
-    /* ── RESPONSIVO ── */
-    @media (max-width: 680px) { .summary-grid { grid-template-columns: 1fr; } }
-    @media (max-width: 600px) {
-      .app-main { padding: 1rem; }
-      .user-name { display: none; }
-      .header-brand h2 { font-size: .95rem; }
-    }
+    /* ── RESPONSIVO COMPLETO ── */
+@media (max-width: 680px) { .summary-grid { grid-template-columns: 1fr; } }
+
+@media (max-width: 1000px) { .cal-wrap    { grid-template-columns: 1fr; } }
+@media (max-width: 900px)  { .evo-row-dupla { grid-template-columns: 1fr; } }
+
+@media (max-width: 640px) {
+  .plano-grid { grid-template-columns: 1fr; }
+  .plano-coluna { border-right: none; border-bottom: 1px solid var(--cinza-200); }
+  .plano-coluna:last-child { border-bottom: none; }
+  .plano-aula-header { flex-direction: column; align-items: flex-start; }
+  .plano-toggle-btn  { width: 100%; text-align: center; }
+}
+
+@media (max-width: 600px) {
+  .app-main { padding: 1rem; }
+  .user-name { display: none; }
+  .header-brand h2 { font-size: .95rem; }
+
+  /* Gráficos */
+  .chart-wrap canvas,
+  .chart-block canvas  { max-height: 260px !important; }
+  #chartEvoRadar       { max-height: 220px !important; }
+
+  /* Modal calendário — bottom sheet */
+  .cal-modal-overlay { align-items: flex-end; padding: 0; }
+  .cal-modal {
+    border-radius: var(--radius) var(--radius) 0 0;
+    max-height: 92vh; width: 100%;
+    animation: slideUpMobile .3s ease;
+  }
+  @keyframes slideUpMobile {
+    from { transform: translateY(100%); }
+    to   { transform: translateY(0); }
+  }
+  .cal-form-row { grid-template-columns: 1fr; }
+
+  /* Calendário grid compacto */
+  .cal-dia      { min-height: 54px; padding: .25rem; }
+  .cal-dia-num  { font-size: .72rem; width: 22px; height: 22px; }
+  .cal-dia-semana { font-size: .65rem; padding: .4rem .2rem; }
+  .cal-evt-chip { font-size: 0; padding: .15rem .25rem; min-height: 14px; }
+  .cal-evt-chip::first-letter { font-size: .75rem; }
+  .cal-header   { flex-direction: column; align-items: stretch; gap: .75rem; }
+  .cal-nav      { justify-content: center; }
+  .cal-add-btn,
+  .cal-hoje-btn { width: 100%; justify-content: center; }
+}
+
+@media (max-width: 560px) {
+  .prio-grid { grid-template-columns: 1fr; }
+  .prio-item { flex-wrap: wrap; gap: .3rem; }
+  .prio-nome { flex-basis: 100%; }
+}
+
+@media (max-width: 520px) {
+  .app-header    { padding: 0 1rem; height: 56px; }
+  .header-brand h2 { font-size: .88rem; }
+  .user-badge    { display: none !important; }
+  .btn-logout    { padding: .35rem .65rem; font-size: .75rem; }
+  .user-avatar   { width: 32px; height: 32px; font-size: .85rem; }
+}
+
+@media (max-width: 480px) {
+  /* Login compacto */
+  #loginScreen  { padding: 1rem .75rem; }
+  .login-card   { padding: 2rem 1.25rem; border-radius: 16px; }
+  .perfil-btn   { font-size: .82rem; padding: .6rem .5rem; }
+
+  /* Cards stats 2 colunas */
+  .stats-grid   { grid-template-columns: 1fr 1fr; gap: .75rem; }
+  .stat-card    { padding: 1rem .85rem; }
+  .stat-card .stat-value { font-size: 1.35rem; }
+  .stat-card .stat-icon  { font-size: 1.25rem; }
+}
+
+@media (max-width: 768px) {
+  /* Touch targets mínimos 44px */
+  .chip, .cal-nav-btn, .btn-login,
+  .btn-logout, .perfil-btn,
+  .plano-toggle-btn, .cal-add-btn { min-height: 44px; }
+
+  /* Tabela mobile */
+  .table-scroll { -webkit-overflow-scrolling: touch; }
+  .turma-table th, .turma-table td { padding: .55rem .65rem; font-size: .78rem; }
+  .cell-pct { min-width: 42px; font-size: .75rem; padding: .2rem .35rem; }
+
+  /* Evita zoom automático no iOS */
+  input, select, textarea { font-size: 16px !important; }
+
+  /* Indicator de scroll nas tabelas */
+  .table-scroll::after {
+    content: '← deslize para ver mais →';
+    display: block; text-align: center;
+    font-size: .72rem; color: var(--cinza-400);
+    padding: .4rem 0; font-style: italic;
+  }
+}
+
+@media (max-width: 400px) {
+  .nav-tab { padding: .85rem .7rem; font-size: 0; }
+  .nav-tab::before { font-size: .95rem; content: attr(data-emoji); }
+}
+
+    /* ── PAINEL EVOLUÇÃO DO ALUNO ── */
+.evo-aluno-selector {
+  background: var(--branco); border-radius: var(--radius);
+  padding: 1.25rem 1.5rem; box-shadow: var(--sombra-sm);
+  margin-bottom: 1.5rem; display: flex; align-items: center;
+  justify-content: space-between; flex-wrap: wrap; gap: 1rem;
+  border-left: 4px solid var(--azul);
+}
+.evo-selector-inner { display: flex; align-items: center; gap: 1rem; }
+.evo-selector-icon  { font-size: 2rem; }
+.evo-selector-label {
+  display: block; font-size: .75rem; font-weight: 600;
+  text-transform: uppercase; letter-spacing: .04em;
+  color: var(--cinza-400); margin-bottom: .35rem;
+}
+.evo-aluno-selector select {
+  padding: .5rem 1rem; border: 1.5px solid var(--cinza-200);
+  border-radius: var(--radius-sm); font-size: .95rem;
+  font-family: inherit; background: var(--cinza-100);
+  color: var(--cinza-900); cursor: pointer; min-width: 220px;
+  transition: border-color var(--transition);
+}
+.evo-aluno-selector select:focus { outline: none; border-color: var(--azul); }
+.evo-aluno-badge {
+  display: flex; align-items: center; gap: .75rem;
+  background: var(--azul-soft); border: 1px solid #bfdbfe;
+  border-radius: var(--radius-sm); padding: .6rem 1rem;
+}
+.evo-aluno-badge span { font-weight: 700; color: #1d4ed8; font-size: .95rem; }
+.evo-aluno-turma {
+  font-size: .78rem !important; font-weight: 500 !important;
+  color: var(--cinza-400) !important;
+  background: var(--branco); padding: .2rem .6rem; border-radius: 20px;
+}
+.evo-placeholder {
+  background: var(--branco); border-radius: var(--radius);
+  padding: 4rem 2rem; text-align: center;
+  box-shadow: var(--sombra-sm); color: var(--cinza-400);
+}
+.evo-placeholder-icon { font-size: 3rem; margin-bottom: 1rem; }
+.evo-placeholder p    { font-size: .95rem; }
+.evo-row-dupla {
+  display: grid; grid-template-columns: 2fr 1fr;
+  gap: 1.5rem; margin-bottom: 1.5rem;
+}
+@media (max-width: 900px) { .evo-row-dupla { grid-template-columns: 1fr; } }
+.evo-chart-controls { display: flex; align-items: center; gap: .75rem; margin-bottom: 1rem; }
+.evo-chart-controls label  { font-size: .85rem; font-weight: 600; color: var(--cinza-700); }
+.evo-chart-controls select {
+  padding: .4rem .8rem; border: 1.5px solid var(--cinza-200);
+  border-radius: var(--radius-sm); font-size: .85rem;
+  font-family: inherit; background: var(--branco); cursor: pointer;
+}
+.evo-chart-controls select:focus { outline: none; border-color: var(--azul); }
+.evo-dificuldades-block {
+  background: var(--branco); border-radius: var(--radius);
+  padding: 1.5rem; box-shadow: var(--sombra-sm);
+}
+.evo-dificuldades-block h3 { font-size: 1rem; font-weight: 600; margin-bottom: 1rem; }
+.dific-item { display: flex; align-items: center; gap: .75rem; padding: .7rem 0; border-bottom: 1px solid var(--cinza-200); }
+.dific-item:last-child { border-bottom: none; }
+.dific-rank { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: .8rem; flex-shrink: 0; }
+.dific-rank-1 { background: #fee2e2; color: #991b1b; }
+.dific-rank-2 { background: #fef9c3; color: #854d0e; }
+.dific-rank-3 { background: #fef9c3; color: #854d0e; }
+.dific-rank-n { background: var(--cinza-200); color: var(--cinza-700); }
+.dific-info   { flex: 1; }
+.dific-tag    { font-weight: 700; font-size: .88rem; color: var(--cinza-900); }
+.dific-desc   { font-size: .75rem; color: var(--cinza-400); margin-top: .1rem; }
+.dific-barra-wrap { width: 80px; background: var(--cinza-200); border-radius: 10px; height: 6px; overflow: hidden; }
+.dific-barra  { height: 100%; border-radius: 10px; }
+.dific-pct    { font-size: .85rem; font-weight: 700; min-width: 42px; text-align: right; }
+.evo-tabela-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--cinza-200);
+  flex-wrap: wrap; gap: .75rem;
+}
+.evo-tabela-header h3 { font-size: 1rem; font-weight: 600; }
+.evo-tabela-filtros select {
+  padding: .4rem .8rem; border: 1.5px solid var(--cinza-200);
+  border-radius: var(--radius-sm); font-size: .83rem;
+  font-family: inherit; background: var(--branco); cursor: pointer;
+}
+
+/* ── PLANO DE AULA SUGERIDO ── */
+.plano-aula-wrap {
+  background: var(--branco);
+  border-radius: var(--radius);
+  box-shadow: var(--sombra-sm);
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+  border-top: 4px solid var(--azul);
+}
+.plano-aula-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--cinza-200);
+  flex-wrap: wrap;
+  gap: .75rem;
+}
+.plano-aula-titulo {
+  display: flex;
+  align-items: center;
+  gap: .85rem;
+}
+.plano-aula-icon { font-size: 1.6rem; }
+.plano-aula-titulo h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--cinza-900);
+}
+.plano-aula-sub {
+  font-size: .78rem;
+  color: var(--cinza-400);
+  font-weight: 400;
+  display: block;
+  margin-top: .15rem;
+}
+.plano-toggle-btn {
+  background: var(--azul-soft);
+  color: var(--azul);
+  border: 1.5px solid #bfdbfe;
+  border-radius: 20px;
+  padding: .35rem .9rem;
+  font-size: .8rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+.plano-toggle-btn:hover { background: #dbeafe; }
+
+/* Grid de categorias */
+.plano-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0;
+  border-bottom: 1px solid var(--cinza-200);
+}
+.plano-coluna {
+  padding: 1.25rem 1.5rem;
+  border-right: 1px solid var(--cinza-200);
+}
+.plano-coluna:last-child { border-right: none; }
+
+.plano-coluna-header {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  margin-bottom: 1rem;
+}
+.plano-coluna-titulo {
+  font-size: .8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+}
+.plano-coluna-count {
+  font-size: .75rem;
+  font-weight: 700;
+  padding: .15rem .5rem;
+  border-radius: 20px;
+  margin-left: auto;
+}
+
+/* Cores por categoria */
+.plano-urgente   .plano-coluna-titulo { color: var(--vermelho); }
+.plano-urgente   .plano-coluna-count  { background: #fee2e2; color: #991b1b; }
+.plano-revisao   .plano-coluna-titulo { color: #b45309; }
+.plano-revisao   .plano-coluna-count  { background: #fef9c3; color: #854d0e; }
+.plano-ok        .plano-coluna-titulo { color: var(--verde-medio); }
+.plano-ok        .plano-coluna-count  { background: #dcfce7; color: #166534; }
+
+/* Itens de TAG dentro de cada coluna */
+.plano-tag-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: .5rem .7rem;
+  border-radius: var(--radius-sm);
+  margin-bottom: .4rem;
+  gap: .5rem;
+}
+.plano-urgente .plano-tag-item { background: #fff5f5; }
+.plano-revisao .plano-tag-item { background: #fffbeb; }
+.plano-ok      .plano-tag-item { background: #f0fdf4; }
+
+.plano-tag-nome {
+  font-size: .83rem;
+  font-weight: 600;
+  color: var(--cinza-900);
+}
+.plano-tag-media {
+  font-size: .8rem;
+  font-weight: 700;
+}
+.plano-urgente .plano-tag-media { color: var(--vermelho); }
+.plano-revisao .plano-tag-media { color: #b45309; }
+.plano-ok      .plano-tag-media { color: var(--verde-medio); }
+
+.plano-tag-barra-wrap {
+  flex: 1;
+  background: var(--cinza-200);
+  border-radius: 10px;
+  height: 5px;
+  overflow: hidden;
+  min-width: 40px;
+}
+.plano-tag-barra { height: 100%; border-radius: 10px; }
+.plano-urgente .plano-tag-barra { background: var(--vermelho); }
+.plano-revisao .plano-tag-barra { background: #f59e0b; }
+.plano-ok      .plano-tag-barra { background: var(--verde-medio); }
+
+/* Caixa de sugestão textual */
+.plano-sugestao-box {
+  display: flex;
+  align-items: flex-start;
+  gap: .85rem;
+  padding: 1rem 1.5rem;
+  background: var(--azul-soft);
+  border-top: 1px solid #bfdbfe;
+}
+.plano-sugestao-icon { font-size: 1.3rem; flex-shrink: 0; margin-top: .1rem; }
+.plano-sugestao-box p {
+  font-size: .88rem;
+  color: #1e40af;
+  font-weight: 500;
+  line-height: 1.55;
+}
+.plano-sugestao-box strong { font-weight: 700; }
+
+/* ══════════════════════════════════════
+   MÓDULO CALENDÁRIO
+   ══════════════════════════════════════ */
+
+/* ── Container principal ── */
+.cal-wrap {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 1.5rem;
+  align-items: start;
+}
+@media (max-width: 1000px) {
+  .cal-wrap { grid-template-columns: 1fr; }
+}
+
+/* ── Cabeçalho do calendário ── */
+.cal-header {
+  display: flex; align-items: center;
+  justify-content: space-between;
+  background: var(--branco); border-radius: var(--radius);
+  padding: 1rem 1.5rem; box-shadow: var(--sombra-sm);
+  margin-bottom: 1.5rem; flex-wrap: wrap; gap: .75rem;
+}
+.cal-nav { display: flex; align-items: center; gap: .75rem; }
+.cal-nav-btn {
+  background: var(--cinza-100); border: 1.5px solid var(--cinza-200);
+  border-radius: var(--radius-sm); width: 34px; height: 34px;
+  font-size: 1rem; cursor: pointer; display: flex;
+  align-items: center; justify-content: center;
+  transition: all var(--transition); color: var(--cinza-700);
+}
+.cal-nav-btn:hover { background: var(--azul-soft); border-color: var(--azul); color: var(--azul); }
+.cal-mes-ano {
+  font-size: 1.1rem; font-weight: 700;
+  color: var(--cinza-900); min-width: 160px; text-align: center;
+}
+.cal-hoje-btn {
+  background: var(--azul-soft); color: var(--azul);
+  border: 1.5px solid #bfdbfe; border-radius: 20px;
+  padding: .35rem .9rem; font-size: .82rem; font-weight: 600;
+  font-family: inherit; cursor: pointer; transition: all var(--transition);
+}
+.cal-hoje-btn:hover { background: #dbeafe; }
+
+/* Botão novo evento (professor) */
+.cal-add-btn {
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  color: var(--branco); border: none; border-radius: 20px;
+  padding: .45rem 1.1rem; font-size: .85rem; font-weight: 600;
+  font-family: inherit; cursor: pointer; display: flex;
+  align-items: center; gap: .4rem;
+  transition: opacity var(--transition), transform var(--transition);
+}
+.cal-add-btn:hover { opacity: .9; transform: translateY(-1px); }
+
+/* ── Grid do calendário ── */
+.cal-grid-wrap {
+  background: var(--branco); border-radius: var(--radius);
+  box-shadow: var(--sombra-sm); overflow: hidden;
+}
+.cal-dias-semana {
+  display: grid; grid-template-columns: repeat(7, 1fr);
+  background: var(--cinza-100); border-bottom: 1px solid var(--cinza-200);
+}
+.cal-dia-semana {
+  padding: .6rem .5rem; text-align: center;
+  font-size: .75rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .05em; color: var(--cinza-400);
+}
+.cal-dias-semana .cal-dia-semana:first-child { color: var(--vermelho); }
+.cal-dias-semana .cal-dia-semana:last-child  { color: var(--azul); }
+
+.cal-grid {
+  display: grid; grid-template-columns: repeat(7, 1fr);
+}
+.cal-dia {
+  min-height: 90px; padding: .4rem;
+  border-right: 1px solid var(--cinza-200);
+  border-bottom: 1px solid var(--cinza-200);
+  cursor: default; transition: background var(--transition);
+  position: relative;
+}
+.cal-dia:nth-child(7n) { border-right: none; }
+.cal-dia:hover { background: var(--cinza-100); }
+.cal-dia.outro-mes { background: var(--cinza-100); }
+.cal-dia.outro-mes .cal-dia-num { color: var(--cinza-400); }
+.cal-dia.hoje { background: var(--azul-soft); }
+.cal-dia.hoje .cal-dia-num {
+  background: var(--azul); color: var(--branco);
+  border-radius: 50%; width: 26px; height: 26px;
+  display: flex; align-items: center; justify-content: center;
+}
+.cal-dia-num {
+  font-size: .82rem; font-weight: 600; color: var(--cinza-700);
+  margin-bottom: .3rem; width: 26px; height: 26px;
+  display: flex; align-items: center; justify-content: center;
+}
+.cal-dia:first-child .cal-dia-num,
+.cal-dia.domingo .cal-dia-num { color: var(--vermelho); }
+.cal-dia.sabado .cal-dia-num  { color: var(--azul); }
+
+/* Chips de eventos dentro do dia */
+.cal-evt-chip {
+  display: block; padding: .18rem .45rem;
+  border-radius: 4px; font-size: .72rem; font-weight: 600;
+  margin-bottom: .18rem; cursor: pointer; white-space: nowrap;
+  overflow: hidden; text-overflow: ellipsis; max-width: 100%;
+  transition: opacity var(--transition);
+}
+.cal-evt-chip:hover { opacity: .8; }
+.cal-evt-aula     { background: #dbeafe; color: #1d4ed8; }
+.cal-evt-simulado { background: #fce7f3; color: #9d174d; }
+.cal-evt-reforco  { background: #dcfce7; color: #166534; }
+.cal-evt-outro    { background: var(--cinza-200); color: var(--cinza-700); }
+.cal-mais {
+  font-size: .7rem; color: var(--cinza-400);
+  padding: .1rem .3rem; cursor: pointer;
+}
+.cal-mais:hover { color: var(--azul); }
+
+/* ── Painel lateral — Agenda ── */
+.cal-agenda {
+  background: var(--branco); border-radius: var(--radius);
+  box-shadow: var(--sombra-sm); overflow: hidden;
+}
+.cal-agenda-header {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--cinza-200);
+  font-weight: 700; font-size: .95rem;
+  color: var(--cinza-900);
+}
+.cal-agenda-lista { max-height: 500px; overflow-y: auto; }
+.cal-agenda-item {
+  display: flex; gap: .85rem; padding: .9rem 1.25rem;
+  border-bottom: 1px solid var(--cinza-200);
+  cursor: pointer; transition: background var(--transition);
+}
+.cal-agenda-item:hover { background: var(--cinza-100); }
+.cal-agenda-item:last-child { border-bottom: none; }
+.cal-agenda-data {
+  display: flex; flex-direction: column; align-items: center;
+  min-width: 36px;
+}
+.cal-agenda-dia   { font-size: 1.2rem; font-weight: 700; color: var(--cinza-900); line-height: 1; }
+.cal-agenda-mes   { font-size: .7rem; text-transform: uppercase; color: var(--cinza-400); font-weight: 600; }
+.cal-agenda-info  { flex: 1; min-width: 0; }
+.cal-agenda-titulo {
+  font-size: .88rem; font-weight: 600; color: var(--cinza-900);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.cal-agenda-hora  { font-size: .78rem; color: var(--cinza-400); margin-top: .1rem; }
+.cal-agenda-tipo  {
+  font-size: .7rem; font-weight: 700; padding: .15rem .5rem;
+  border-radius: 20px; align-self: flex-start; white-space: nowrap;
+}
+.cal-agenda-vazio {
+  padding: 2rem 1.25rem; text-align: center;
+  color: var(--cinza-400); font-style: italic; font-size: .85rem;
+}
+
+/* ── Modal de evento ── */
+.cal-modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.45); z-index: 1000;
+  display: flex; align-items: center; justify-content: center;
+  padding: 1rem; animation: fadeIn .2s ease;
+}
+.cal-modal {
+  background: var(--branco); border-radius: var(--radius);
+  box-shadow: var(--sombra-lg); width: 100%; max-width: 520px;
+  max-height: 90vh; overflow-y: auto;
+  animation: slideUp .25s ease;
+}
+.cal-modal-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--cinza-200);
+}
+.cal-modal-header h3 { font-size: 1rem; font-weight: 700; }
+.cal-modal-close {
+  background: none; border: none; font-size: 1.2rem;
+  cursor: pointer; color: var(--cinza-400); padding: .2rem .4rem;
+  border-radius: 4px; transition: all var(--transition);
+}
+.cal-modal-close:hover { background: var(--cinza-200); color: var(--cinza-900); }
+.cal-modal-body  { padding: 1.5rem; }
+.cal-modal-footer {
+  padding: 1rem 1.5rem; border-top: 1px solid var(--cinza-200);
+  display: flex; gap: .75rem; justify-content: flex-end;
+}
+
+/* Formulário do modal */
+.cal-form-group { margin-bottom: 1rem; }
+.cal-form-group label {
+  display: block; font-size: .78rem; font-weight: 600;
+  text-transform: uppercase; letter-spacing: .04em;
+  color: var(--cinza-700); margin-bottom: .4rem;
+}
+.cal-form-group input,
+.cal-form-group select,
+.cal-form-group textarea {
+  width: 100%; padding: .65rem .9rem;
+  border: 1.5px solid var(--cinza-200); border-radius: var(--radius-sm);
+  font-size: .9rem; font-family: inherit; background: var(--cinza-100);
+  color: var(--cinza-900); transition: border-color var(--transition);
+}
+.cal-form-group input:focus,
+.cal-form-group select:focus,
+.cal-form-group textarea:focus {
+  outline: none; border-color: var(--azul); background: var(--branco);
+}
+.cal-form-group textarea { resize: vertical; min-height: 80px; }
+.cal-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+/* Botões do modal */
+.cal-btn-salvar {
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  color: var(--branco); border: none; border-radius: var(--radius-sm);
+  padding: .65rem 1.4rem; font-size: .9rem; font-weight: 600;
+  font-family: inherit; cursor: pointer; transition: opacity var(--transition);
+}
+.cal-btn-salvar:hover { opacity: .9; }
+.cal-btn-deletar {
+  background: var(--vermelho-soft); color: var(--vermelho);
+  border: 1.5px solid #fca5a5; border-radius: var(--radius-sm);
+  padding: .65rem 1.1rem; font-size: .9rem; font-weight: 600;
+  font-family: inherit; cursor: pointer; transition: all var(--transition);
+  margin-right: auto;
+}
+.cal-btn-deletar:hover { background: #fee2e2; }
+.cal-btn-cancelar {
+  background: var(--cinza-100); color: var(--cinza-700);
+  border: 1.5px solid var(--cinza-200); border-radius: var(--radius-sm);
+  padding: .65rem 1.1rem; font-size: .9rem; font-weight: 600;
+  font-family: inherit; cursor: pointer; transition: all var(--transition);
+}
+.cal-btn-cancelar:hover { background: var(--cinza-200); }
+
+/* Detalhes de evento (aluno) */
+.cal-det-tipo {
+  display: inline-flex; padding: .3rem .8rem;
+  border-radius: 20px; font-size: .8rem; font-weight: 700;
+  margin-bottom: 1rem;
+}
+.cal-det-row {
+  display: flex; gap: .75rem; align-items: flex-start;
+  padding: .6rem 0; border-bottom: 1px solid var(--cinza-200);
+  font-size: .88rem;
+}
+.cal-det-row:last-child { border-bottom: none; }
+.cal-det-icone { width: 20px; text-align: center; flex-shrink: 0; margin-top: .1rem; }
+.cal-det-label { color: var(--cinza-400); min-width: 70px; font-weight: 500; }
+.cal-det-valor { color: var(--cinza-900); font-weight: 600; flex: 1; }
+
+
   </style>
 </head>
 <body>
@@ -482,59 +1123,236 @@
     <!-- ════ ABA: VISÃO DA TURMA (professor) ════ -->
     <section class="tab-panel" id="panel-turma">
 
-      <!-- Cards resumo -->
-      <div class="stats-grid" id="profStatsGrid"></div>
+  <!-- Cards resumo -->
+  <div class="stats-grid" id="profStatsGrid"></div>
 
-      <!-- Controles -->
-      <div class="threshold-row">
-        <label>⚙️ Threshold de atenção:</label>
-        <input type="range" id="thresholdSlider" min="40" max="80" value="60"
-               oninput="onThresholdChange(this.value)" />
-        <div class="threshold-badge" id="thresholdBadge">60%</div>
-        <div class="threshold-legend">
-          <div class="leg"><div class="leg-dot" style="background:#dcfce7;border:1px solid #86efac"></div> ≥ threshold</div>
-          <div class="leg"><div class="leg-dot" style="background:#fef9c3;border:1px solid #fde047"></div> threshold−10%</div>
-          <div class="leg"><div class="leg-dot" style="background:#fee2e2;border:1px solid #fca5a5"></div> &lt; threshold−10%</div>
+  <!-- Threshold -->
+  <div class="threshold-row">
+    <label>⚙️ Threshold de atenção:</label>
+    <input type="range" id="thresholdSlider" min="40" max="80" value="60"
+           oninput="onThresholdChange(this.value)" />
+    <div class="threshold-badge" id="thresholdBadge">60%</div>
+    <div class="threshold-legend">
+      <div class="leg"><div class="leg-dot" style="background:#dcfce7;border:1px solid #86efac"></div> ≥ threshold</div>
+      <div class="leg"><div class="leg-dot" style="background:#fef9c3;border:1px solid #fde047"></div> threshold−10%</div>
+      <div class="leg"><div class="leg-dot" style="background:#fee2e2;border:1px solid #fca5a5"></div> &lt; threshold−10%</div>
+    </div>
+  </div>
+
+  <!-- Filtro de turma -->
+  <div class="prof-controls">
+    <label>Filtrar turma:</label>
+    <select id="filtroTurma" onchange="renderPainelProfessor()">
+      <option value="__all__">Todas as turmas</option>
+    </select>
+  </div>
+
+  <!-- ════ PLANO DE AULA SUGERIDO ════ -->
+<div class="plano-aula-wrap" id="planoAulaWrap">
+  <div class="plano-aula-header">
+    <div class="plano-aula-titulo">
+      <span class="plano-aula-icon">📋</span>
+      <div>
+        <h3>Plano de Aula Sugerido</h3>
+        <span class="plano-aula-sub" id="planoAulaSub">
+          com base na última avaliação
+        </span>
+      </div>
+    </div>
+    <button class="plano-toggle-btn" id="planoToggleBtn"
+            onclick="togglePlanoAula()">
+      ▲ Recolher
+    </button>
+  </div>
+
+  <div id="planoAulaConteudo">
+    <div class="plano-grid" id="planoGrid"></div>
+
+    <div class="plano-sugestao-box" id="planoSugestaoBox">
+      <span class="plano-sugestao-icon">💡</span>
+      <p id="planoSugestaoTexto"></p>
+    </div>
+  </div>
+</div>
+
+  <!-- Tabela da turma -->
+  <div class="turma-table-wrap">
+    <h3>👥 Desempenho Individual por TAG</h3>
+    <div class="table-scroll">
+      <table class="turma-table" id="tabelaTurma">
+        <thead id="tabelaTurmaHead"></thead>
+        <tbody id="tabelaTurmaBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Painel de Prioridades -->
+  <div class="prio-wrap" id="painelPrioridades">
+    <div class="prio-grid">
+      <div class="prio-card prio-danger">
+        <h4>🔴 Atenção Urgente</h4>
+        <div class="prio-list" id="prioAlertas">
+          <p class="prio-vazio">Carregando...</p>
         </div>
       </div>
+      <div class="prio-card prio-success">
+        <h4>📈 Maiores Evoluções</h4>
+        <div class="prio-list" id="prioEvolucoes">
+          <p class="prio-vazio">Carregando...</p>
+        </div>
+      </div>
+      <div class="prio-card prio-gold">
+        <h4>🏆 Destaques da Turma</h4>
+        <div class="prio-list" id="prioDestaques">
+          <p class="prio-vazio">Carregando...</p>
+        </div>
+      </div>
+    </div>
+  </div>
 
-      <div class="prof-controls">
-        <label>Filtrar turma:</label>
-        <select id="filtroTurma" onchange="renderPainelProfessor()">
-          <option value="__all__">Todas as turmas</option>
+
+  <!-- ✅ GRÁFICO INTEGRADO — antes era aba separada -->
+  <div class="media-turma-block">
+    <h3>📊 Média da Turma por TAG</h3>
+    <div class="chart-wrap"><canvas id="chartMediaTurma" height="90"></canvas></div>
+  </div>
+
+</section>
+
+<!-- ════ ABA: EVOLUÇÃO DO ALUNO (professor) ════ -->
+<section class="tab-panel" id="panel-evolucao-aluno">
+
+  <div class="evo-aluno-selector">
+    <div class="evo-selector-inner">
+      <span class="evo-selector-icon">🎓</span>
+      <div>
+        <label class="evo-selector-label">Selecionar Aluno</label>
+        <select id="selectAlunoEvo" onchange="renderEvolucaoAluno()">
+          <option value="">— Escolha um aluno —</option>
         </select>
       </div>
+    </div>
+    <div class="evo-aluno-badge" id="evoAlunoBadge" style="display:none">
+      <span id="evoAlunoNome"></span>
+      <span class="evo-aluno-turma" id="evoAlunoTurma"></span>
+    </div>
+  </div>
 
-      <!-- Tabela da turma -->
-      <div class="turma-table-wrap">
-        <h3>👥 Desempenho Individual por TAG</h3>
-        <div class="table-scroll">
-          <table class="turma-table" id="tabelaTurma">
-            <thead id="tabelaTurmaHead"></thead>
-            <tbody id="tabelaTurmaBody"></tbody>
-          </table>
+  <div class="evo-placeholder" id="evoPlaceholder">
+    <div class="evo-placeholder-icon">📊</div>
+    <p>Selecione um aluno acima para visualizar seu painel de evolução</p>
+  </div>
+
+  <div id="evoPainelConteudo" style="display:none">
+
+    <div class="stats-grid" id="evoStatsGrid"></div>
+
+    <div class="evo-row-dupla">
+      <div class="chart-block">
+        <h3>📈 Evolução por TAG ao Longo do Tempo</h3>
+        <div class="evo-chart-controls">
+          <label>Visualizar:</label>
+          <select id="evoTagFiltro" onchange="atualizarGraficoEvo()">
+            <option value="__all__">Todas as TAGs</option>
+          </select>
+        </div>
+        <canvas id="chartEvoAluno" height="100"></canvas>
+      </div>
+      <div class="evo-dificuldades-block">
+        <h3>🔴 Dificuldades Identificadas</h3>
+        <div id="evoDificuldades"></div>
+      </div>
+    </div>
+
+    <div class="evo-row-dupla">
+      <div class="chart-block">
+        <h3>🕸️ Perfil de Desempenho Atual</h3>
+        <div style="max-width:340px; margin:0 auto;">
+          <canvas id="chartEvoRadar" height="280"></canvas>
         </div>
       </div>
+      <div class="chart-block" id="blocoComparativo">
+        <h3>⚖️ Comparativo — Primeira vs. Última Avaliação</h3>
+        <canvas id="chartEvoComparativo" height="120"></canvas>
+      </div>
+    </div>
 
-      <!-- Heatmap -->
-      <div class="heatmap-wrap">
-        <h3>🌡️ Heatmap — Alunos × TAGs</h3>
-        <div class="heatmap-scroll">
-          <table class="heatmap-table" id="heatmapTable">
-            <thead id="heatmapHead"></thead>
-            <tbody id="heatmapBody"></tbody>
-          </table>
+    <div class="turma-table-wrap">
+      <div class="evo-tabela-header">
+        <h3>📋 Tabela Geral de Desempenho por TAG</h3>
+        <div class="evo-tabela-filtros">
+          <select id="evoTabelaOrdem" onchange="renderTabelaEvo()">
+            <option value="tag">Ordenar por TAG</option>
+            <option value="pct_asc">Menor % primeiro</option>
+            <option value="pct_desc">Maior % primeiro</option>
+            <option value="erros">Mais erros primeiro</option>
+          </select>
         </div>
       </div>
-    </section>
-
-    <!-- ════ ABA: MÉDIA DA TURMA (professor) ════ -->
-    <section class="tab-panel" id="panel-media">
-      <div class="media-turma-block">
-        <h3>📊 Média da Turma por TAG</h3>
-        <div class="chart-wrap"><canvas id="chartMediaTurma" height="90"></canvas></div>
+      <div class="table-scroll">
+        <table class="turma-table">
+          <thead id="tabelaEvoHead"></thead>
+          <tbody id="tabelaEvoBody"></tbody>
+        </table>
       </div>
-    </section>
+    </div>
+
+  </div>
+</section>
+
+<!-- ════ ABA: CALENDÁRIO ════ -->
+<section class="tab-panel" id="panel-calendario">
+
+  <!-- Cabeçalho de navegação -->
+  <div class="cal-header">
+    <div class="cal-nav">
+      <button class="cal-nav-btn" onclick="calNavegar(-1)">‹</button>
+      <span class="cal-mes-ano" id="calMesAno">Abril 2026</span>
+      <button class="cal-nav-btn" onclick="calNavegar(+1)">›</button>
+    </div>
+    <button class="cal-hoje-btn" onclick="calIrHoje()">📅 Hoje</button>
+    <!-- Botão só aparece para professor via JS -->
+    <button class="cal-add-btn" id="calAddBtn"
+            onclick="calAbrirModal()" style="display:none">
+      ＋ Novo Evento
+    </button>
+  </div>
+
+  <!-- Grid + Agenda lateral -->
+  <div class="cal-wrap">
+
+    <!-- Calendário mensal -->
+    <div>
+      <div class="cal-grid-wrap">
+        <div class="cal-dias-semana">
+          <div class="cal-dia-semana">Dom</div>
+          <div class="cal-dia-semana">Seg</div>
+          <div class="cal-dia-semana">Ter</div>
+          <div class="cal-dia-semana">Qua</div>
+          <div class="cal-dia-semana">Qui</div>
+          <div class="cal-dia-semana">Sex</div>
+          <div class="cal-dia-semana">Sáb</div>
+        </div>
+        <div class="cal-grid" id="calGrid"></div>
+      </div>
+    </div>
+
+    <!-- Agenda lateral — próximos 30 dias -->
+    <div class="cal-agenda">
+      <div class="cal-agenda-header">📋 Próximos Eventos</div>
+      <div class="cal-agenda-lista" id="calAgendaLista"></div>
+    </div>
+
+  </div>
+
+  <!-- Modal (professor: formulário | aluno: detalhes) -->
+  <div class="cal-modal-overlay" id="calModalOverlay"
+       style="display:none" onclick="calFecharModalOverlay(event)">
+    <div class="cal-modal" id="calModal"></div>
+  </div>
+
+</section>
+
 
   </main>
 </div>
@@ -567,6 +1385,11 @@ const COLOR_CORRECT_ALPHA = 'rgba(45,138,86,0.15)';
 const COLOR_WRONG         = '#e53e3e';
 const PALETTE = ['#2d8a56','#3b82f6','#f59e0b','#8b5cf6','#ec4899',
                  '#14b8a6','#f97316','#6366f1','#a3e635','#ef4444'];
+
+// Ajuste global Chart.js para mobile
+Chart.defaults.font.size = window.innerWidth < 600 ? 10 : 12;
+Chart.defaults.plugins.legend.labels.boxWidth =
+  window.innerWidth < 600 ? 10 : 40;
 
 /* 
    ESTADO GLOBAL
@@ -693,11 +1516,11 @@ function showDashboard() {
   const nav = document.getElementById('appNav');
 
   // Limpa COMPLETAMENTE antes de inserir — evita duplicatas
-  nav.innerHTML = '';
   nav.innerHTML = `
-    <div class="nav-tab" data-tab="performance">📊 Desempenho por TAG</div>
-    <div class="nav-tab" data-tab="evolution">📈 Evolução Temporal</div>
-    <div class="nav-tab" data-tab="summary">📋 Resumo Geral</div>
+    <div class="nav-tab" data-tab="performance" data-emoji="📊">📊 Desempenho por TAG</div>
+    <div class="nav-tab" data-tab="evolution"   data-emoji="📈">📈 Evolução Temporal</div>
+    <div class="nav-tab" data-tab="summary"     data-emoji="📋">📋 Resumo Geral</div>
+    <div class="nav-tab" data-tab="calendario"  data-emoji="🗓️">🗓️ Calendário</div>
   `;
 
   document.getElementById('loginScreen').style.display = 'none';
@@ -725,15 +1548,17 @@ function showProfessor() {
 
   // Abas do professor
   document.getElementById('appNav').innerHTML = `
-    <div class="nav-tab prof-tab active" data-tab="turma">👥 Visão da Turma</div>
-    <div class="nav-tab prof-tab"        data-tab="media">📊 Média por TAG</div>
+    <div class="nav-tab prof-tab active" data-tab="turma"         data-emoji="👥">👥 Visão da Turma</div>
+    <div class="nav-tab prof-tab"        data-tab="evolucao-aluno" data-emoji="📈">📈 Evolução do Aluno</div>
+    <div class="nav-tab prof-tab"        data-tab="calendario"     data-emoji="🗓️">🗓️ Calendário</div>
   `;
 
   document.getElementById('loginScreen').style.display = 'none';
   document.getElementById('appScreen').classList.add('active');
 
-  // Popula select de turmas
+  // Popula selects
   popular_select_turmas();
+  popular_select_alunos_evo();   // ← LINHA NOVA
 
   // Registra eventos das abas
   registrarEventosAbas();
@@ -770,11 +1595,12 @@ function switchTab(tabId) {
 
   // Renderiza conteúdo com proteção contra erro
   try {
-    if (tabId === 'performance') renderPerformanceChart();
-    if (tabId === 'evolution')   renderEvolutionChart();
-    if (tabId === 'summary')     renderSummary();
-    if (tabId === 'turma')       renderPainelProfessor();
-    if (tabId === 'media')       renderMediaTurma();
+   if (tabId === 'turma')          renderPainelProfessor();
+if (tabId === 'evolucao-aluno') renderEvolucaoAluno();
+if (tabId === 'performance')    renderPerformanceChart();
+if (tabId === 'evolution')      renderEvolutionChart();
+if (tabId === 'summary')        renderSummary();
+if (tabId === 'calendario')     renderCalendario();   // ← NOVA LINHA
   } catch (err) {
     console.error(`[BioTrack] Erro ao renderizar aba '${tabId}':`, err);
   }
@@ -853,7 +1679,10 @@ function renderPerformanceChart() {
       responsive: true,
       interaction: { mode: 'index' },
       plugins: {
-        legend: { position: 'top' },
+  legend: {
+    position: 'top',
+    labels: { usePointStyle: true, pointStyle: 'line' },
+  },
         tooltip: {
           callbacks: {
             footer(items) {
@@ -919,7 +1748,10 @@ function renderEvolutionChart() {
       responsive: true,
       interaction: { mode: 'index' },
       plugins: {
-        legend: { position: 'top' },
+  legend: {
+    position: 'top',
+    labels: { usePointStyle: true, pointStyle: 'line' },
+  },
         tooltip: { callbacks: { label: ctx => ` ${ctx.dataset.label}: ${ctx.parsed.y}%` } },
       },
       scales: {
@@ -1045,7 +1877,7 @@ function renderSummary() {
 
 /* 
    ══════════════════════════════════════════
-   SEÇÃO PROFESSOR — painel e heatmap
+   SEÇÃO PROFESSOR — painel
    ══════════════════════════════════════════
  */
 
@@ -1110,6 +1942,7 @@ function tagMaisFraca() {
   });
   return { tag: piorTag, media: piorMedia };
 }
+
 
 /* Renderiza todo o painel do professor */
 function renderPainelProfessor() {
@@ -1222,32 +2055,203 @@ function renderPainelProfessor() {
     });
   }
 
-  // ── Heatmap ───────────────────────────────────────────────────
-  const hHead = document.getElementById('heatmapHead');
-  const hBody = document.getElementById('heatmapBody');
+  // Renderiza o painel de prioridades
+  renderPainelPrioridades();
 
-  hHead.innerHTML = `
-    <tr>
-      <th>Aluno</th>
-      ${TAGS.map(t => `<th>${t.replace('BIO_','')}</th>`).join('')}
-    </tr>
-  `;
+  function renderPainelPrioridades() {
+  const turmaSelecionada = document.getElementById('filtroTurma')?.value || '__all__';
 
-  hBody.innerHTML = '';
-  alunosFiltrados.forEach(([id, u]) => {
-    const cells = TAGS.map(tag => {
-      const pct = pctCorrect(u.performance[tag]);
-      const { bg, color } = heatColor(pct);
-      return `<td style="background:${bg}; color:${color};">${pct}%</td>`;
-    }).join('');
-
-    hBody.innerHTML += `
-      <tr>
-        <td class="td-aluno-nome">${u.name}</td>
-        ${cells}
-      </tr>
-    `;
+  // Filtra alunos pela turma selecionada
+  const alunosFiltrados = Object.entries(USERS).filter(([id, u]) => {
+    if (turmaSelecionada === '__all__') return true;
+    return (u.turma || '').trim() === turmaSelecionada;
   });
+
+// ── Bloco 1: ATENÇÃO URGENTE ─────────────────────────────────
+// ── Bloco 1: ATENÇÃO URGENTE ─────────────────────────────────
+// Critério único: qualquer TAG individual abaixo de 70%
+
+const alertas = [];
+
+alunosFiltrados.forEach(([id, u]) => {
+
+  // Filtra quais TAGs estão abaixo de 70%
+  const tagsAbaixo = TAGS.filter(tag => pctCorrect(u.performance[tag]) < 70);
+
+  // Só entra se tiver pelo menos 1 TAG abaixo de 70%
+  if (tagsAbaixo.length > 0) {
+
+    // Identifica a TAG com pior desempenho
+    const piorTag = tagsAbaixo.reduce((pior, tag) =>
+      pctCorrect(u.performance[tag]) < pctCorrect(u.performance[pior]) ? tag : pior
+    );
+
+    alertas.push({
+      nome:       u.name,
+      tagsAbaixo: tagsAbaixo.length,
+      piorTag:    piorTag.replace('BIO_', ''),
+      piorPct:    pctCorrect(u.performance[piorTag]),
+    });
+  }
+});
+
+// Ordena: mais TAGs críticas primeiro, desempate pelo pior %
+alertas.sort((a, b) => b.tagsAbaixo - a.tagsAbaixo || a.piorPct - b.piorPct);
+
+const elAlertas = document.getElementById('prioAlertas');
+if (alertas.length === 0) {
+  elAlertas.innerHTML = `
+    <p class="prio-vazio">✅ Todos os alunos acima de 70% em todas as TAGs</p>
+  `;
+} else {
+  elAlertas.innerHTML = alertas.map(a => `
+    <div class="prio-item">
+      <span class="prio-nome">${a.nome}</span>
+      <span class="prio-tag">Pior: ${a.piorTag} → ${a.piorPct}%</span>
+      <span class="prio-badge-queda">⚠️ ${a.tagsAbaixo} TAG(s) &lt; 70%</span>
+    </div>
+  `).join('');
+}
+
+  // ── Bloco 2: Maiores evoluções ────────────────────────────────
+  const evolucoes = [];
+  alunosFiltrados.forEach(([id, u]) => {
+    const evo = u.evolution;
+    if (evo.length < 2) return;
+
+    const ultima    = evo[evo.length - 1].scores;
+    const penultima = evo[evo.length - 2].scores;
+
+    TAGS.forEach(tag => {
+      const ganho = ultima[tag] - penultima[tag];
+      if (ganho >= 5) {
+        evolucoes.push({
+          nome:  u.name,
+          tag:   tag.replace('BIO_', ''),
+          ganho: ganho,
+        });
+      }
+    });
+  });
+  evolucoes.sort((a, b) => b.ganho - a.ganho);
+
+  const elEvolucoes = document.getElementById('prioEvolucoes');
+  if (evolucoes.length === 0) {
+    elEvolucoes.innerHTML = '<p class="prio-vazio">📊 Sem dados comparativos ainda</p>';
+  } else {
+    elEvolucoes.innerHTML = evolucoes.slice(0, 4).map(e => `
+      <div class="prio-item">
+        <span class="prio-nome">${e.nome}</span>
+        <span class="prio-tag">${e.tag}</span>
+        <span class="prio-badge-ganho">↑ +${e.ganho}pts</span>
+      </div>
+    `).join('');
+  }
+
+  // ── Bloco 3: Destaques ────────────────────────────────────────
+  const destaques = alunosFiltrados
+    .map(([id, u]) => ({
+      nome:    u.name,
+      tagsOk:  TAGS.filter(t => pctCorrect(u.performance[t]) >= 90).length,
+    }))
+    .filter(d => d.tagsOk >= 3)
+    .sort((a, b) => b.tagsOk - a.tagsOk);
+
+  const elDestaques = document.getElementById('prioDestaques');
+  if (destaques.length === 0) {
+    elDestaques.innerHTML = '<p class="prio-vazio">🎯 Continue avaliando a turma</p>';
+  } else {
+    elDestaques.innerHTML = destaques.slice(0, 4).map(d => `
+      <div class="prio-item">
+        <span class="prio-nome">${d.nome}</span>
+        <span class="prio-tag">${d.tagsOk} TAGs acima de 90%</span>
+        <span class="prio-badge-gold">⭐ Destaque</span>
+      </div>
+    `).join('');
+  }
+}
+
+  // Renderiza gráfico e prioridades
+  renderPlanoAula(alunosFiltrados);
+  renderMediaTurma();
+  renderPainelPrioridades();
+}  // ← fecha renderPainelProfessor()
+
+
+/* Painel de prioridades — função independente (fora de renderPainelProfessor) */
+function renderPainelPrioridades() {
+  const turmaSelecionada = document.getElementById('filtroTurma')?.value || '__all__';
+  const alunosFiltrados  = Object.entries(USERS).filter(([id, u]) => {
+    if (turmaSelecionada === '__all__') return true;
+    return (u.turma || '').trim() === turmaSelecionada;
+  });
+
+  // ── Bloco 1: ATENÇÃO URGENTE ──────────────────────────────────
+  const alertas = [];
+  alunosFiltrados.forEach(([id, u]) => {
+    const tagsAbaixo = TAGS.filter(tag => pctCorrect(u.performance[tag]) < 70);
+    if (tagsAbaixo.length > 0) {
+      const piorTag = tagsAbaixo.reduce((pior, tag) =>
+        pctCorrect(u.performance[tag]) < pctCorrect(u.performance[pior]) ? tag : pior
+      );
+      alertas.push({
+        nome: u.name, tagsAbaixo: tagsAbaixo.length,
+        piorTag: piorTag.replace('BIO_', ''),
+        piorPct: pctCorrect(u.performance[piorTag]),
+      });
+    }
+  });
+  alertas.sort((a, b) => b.tagsAbaixo - a.tagsAbaixo || a.piorPct - b.piorPct);
+
+  const elAlertas = document.getElementById('prioAlertas');
+  elAlertas.innerHTML = alertas.length === 0
+    ? '<p class="prio-vazio">✅ Todos os alunos acima de 70% em todas as TAGs</p>'
+    : alertas.map(a => `
+        <div class="prio-item">
+          <span class="prio-nome">${a.nome}</span>
+          <span class="prio-tag">Pior: ${a.piorTag} → ${a.piorPct}%</span>
+          <span class="prio-badge-queda">⚠️ ${a.tagsAbaixo} TAG(s) &lt; 70%</span>
+        </div>`).join('');
+
+  // ── Bloco 2: Maiores evoluções ────────────────────────────────
+  const evolucoes = [];
+  alunosFiltrados.forEach(([id, u]) => {
+    const evo = u.evolution;
+    if (evo.length < 2) return;
+    const ultima    = evo[evo.length - 1].scores;
+    const penultima = evo[evo.length - 2].scores;
+    TAGS.forEach(tag => {
+      const ganho = ultima[tag] - penultima[tag];
+      if (ganho >= 5) evolucoes.push({ nome: u.name, tag: tag.replace('BIO_', ''), ganho });
+    });
+  });
+  evolucoes.sort((a, b) => b.ganho - a.ganho);
+
+  const elEvolucoes = document.getElementById('prioEvolucoes');
+  elEvolucoes.innerHTML = evolucoes.length === 0
+    ? '<p class="prio-vazio">📊 Sem dados comparativos ainda</p>'
+    : evolucoes.slice(0, 4).map(e => `
+        <div class="prio-item">
+          <span class="prio-nome">${e.nome}</span>
+          <span class="prio-tag">${e.tag}</span>
+          <span class="prio-badge-ganho">↑ +${e.ganho}pts</span>
+        </div>`).join('');
+
+  // ── Bloco 3: Destaques ────────────────────────────────────────
+  const destaques = alunosFiltrados
+    .map(([id, u]) => ({ nome: u.name, tagsOk: TAGS.filter(t => pctCorrect(u.performance[t]) >= 90).length }))
+    .filter(d => d.tagsOk >= 3)
+    .sort((a, b) => b.tagsOk - a.tagsOk);
+
+  const elDestaques = document.getElementById('prioDestaques');
+  elDestaques.innerHTML = destaques.length === 0
+    ? '<p class="prio-vazio">🎯 Continue avaliando a turma</p>'
+    : destaques.slice(0, 4).map(d => `
+        <div class="prio-item">
+          <span class="prio-nome">${d.nome}</span>
+          <span class="prio-tag">${d.tagsOk} TAGs acima de 90%</span>
+          <span class="prio-badge-gold">⭐ Destaque</span>
+        </div>`).join('');
 }
 
 /* Gráfico de média da turma por TAG */
@@ -1315,6 +2319,803 @@ function renderMediaTurma() {
       },
     },
   });
+}
+
+/* ══════════════════════════════════════════════════
+   PLANO DE AULA SUGERIDO
+   ══════════════════════════════════════════════════ */
+
+function renderPlanoAula(alunosFiltrados) {
+  if (!alunosFiltrados || alunosFiltrados.length === 0) return;
+
+  // ── Calcula média de cada TAG entre os alunos filtrados ───────
+  const mediasTag = TAGS.map(tag => {
+    const soma = alunosFiltrados.reduce(
+      (acc, [, u]) => acc + pctCorrect(u.performance[tag]), 0
+    );
+    return {
+      tag,
+      media: Math.round(soma / alunosFiltrados.length),
+    };
+  });
+
+  // ── Classifica as TAGs nas 3 categorias ──────────────────────
+  const urgentes = mediasTag.filter(t => t.media < 60)
+                            .sort((a, b) => a.media - b.media);
+  const revisao  = mediasTag.filter(t => t.media >= 60 && t.media < 75)
+                            .sort((a, b) => a.media - b.media);
+  const ok       = mediasTag.filter(t => t.media >= 75)
+                            .sort((a, b) => b.media - a.media);
+
+  // ── Atualiza o subtítulo com a turma selecionada ──────────────
+  const turma = document.getElementById('filtroTurma')?.value || '__all__';
+  const label = turma === '__all__' ? 'todas as turmas' : `Turma ${turma}`;
+  document.getElementById('planoAulaSub').textContent =
+    `${alunosFiltrados.length} aluno(s) · ${label}`;
+
+  // ── Função auxiliar para renderizar uma coluna ────────────────
+  function renderColuna(tipo, titulo, emoji, lista) {
+    if (lista.length === 0) {
+      return `
+        <div class="plano-coluna plano-${tipo}">
+          <div class="plano-coluna-header">
+            <span>${emoji}</span>
+            <span class="plano-coluna-titulo">${titulo}</span>
+            <span class="plano-coluna-count">0</span>
+          </div>
+          <p style="font-size:.8rem;color:var(--cinza-400);font-style:italic;text-align:center;padding:.5rem 0;">
+            Nenhuma TAG nesta categoria
+          </p>
+        </div>`;
+    }
+    const itens = lista.map(t => `
+      <div class="plano-tag-item">
+        <span class="plano-tag-nome">${t.tag.replace('BIO_', '')}</span>
+        <div class="plano-tag-barra-wrap">
+          <div class="plano-tag-barra" style="width:${t.media}%"> 
+                    </div>
+        </div>
+        <span class="plano-tag-media">${t.media}%</span>
+      </div>
+    `).join('');
+
+    return `
+      <div class="plano-coluna plano-${tipo}">
+        <div class="plano-coluna-header">
+          <span>${emoji}</span>
+          <span class="plano-coluna-titulo">${titulo}</span>
+          <span class="plano-coluna-count">${lista.length}</span>
+        </div>
+        ${itens}
+      </div>`;
+  }
+
+  // ── Renderiza as 3 colunas ────────────────────────────────────
+  document.getElementById('planoGrid').innerHTML =
+    renderColuna('urgente', 'Reteaching Urgente',    '🔴', urgentes) +
+    renderColuna('revisao', 'Revisão Recomendada',   '🟡', revisao)  +
+    renderColuna('ok',      'Conteúdo Consolidado',  '✅', ok);
+
+  // ── Gera a sugestão textual automática ────────────────────────
+  let sugestao = '';
+
+  if (urgentes.length > 0) {
+    const pior = urgentes[0];
+    sugestao += `Inicie a próxima aula com uma atividade diagnóstica focada em
+      <strong>${pior.tag.replace('BIO_', '')}</strong>
+      (média atual: <strong>${pior.media}%</strong> — abaixo do esperado).`;
+
+    if (urgentes.length > 1) {
+      const demais = urgentes.slice(1).map(t => t.tag.replace('BIO_', '')).join(', ');
+      sugestao += ` Reserve também momentos de reforço para: <strong>${demais}</strong>.`;
+    }
+  }
+
+  if (revisao.length > 0) {
+    const tags = revisao.map(t => t.tag.replace('BIO_', '')).join(', ');
+    sugestao += ` Para <strong>${tags}</strong>, uma revisão rápida
+      (10–15 min) pode ser suficiente para consolidar o aprendizado.`;
+  }
+
+  if (urgentes.length === 0 && revisao.length === 0) {
+    sugestao = '🎉 Excelente! Todos os conteúdos estão consolidados. Considere avançar para novos tópicos ou propor atividades de aprofundamento.';
+  }
+
+  document.getElementById('planoSugestaoTexto').innerHTML = sugestao;
+}
+
+/* Recolhe / expande o Plano de Aula */
+function togglePlanoAula() {
+  const conteudo = document.getElementById('planoAulaConteudo');
+  const btn      = document.getElementById('planoToggleBtn');
+  const visivel  = conteudo.style.display !== 'none';
+  conteudo.style.display = visivel ? 'none' : 'block';
+  btn.textContent        = visivel ? '▼ Expandir' : '▲ Recolher';
+}
+
+/* ══════════════════════════════════════════════════
+   PAINEL DE EVOLUÇÃO DO ALUNO
+   ══════════════════════════════════════════════════ */
+
+function popular_select_alunos_evo() {
+  const sel = document.getElementById('selectAlunoEvo');
+  if (!sel) return;
+  sel.innerHTML = '<option value="">— Escolha um aluno —</option>';
+  Object.entries(USERS)
+    .sort(([, a], [, b]) => a.name.localeCompare(b.name))
+    .forEach(([id, u]) => {
+      const opt       = document.createElement('option');
+      opt.value       = id;
+      opt.textContent = `${u.name}${u.turma ? '  · ' + u.turma : ''}`;
+      sel.appendChild(opt);
+    });
+  const selTag = document.getElementById('evoTagFiltro');
+  if (selTag) {
+    selTag.innerHTML = '<option value="__all__">Todas as TAGs</option>';
+    TAGS.forEach(tag => {
+      const opt = document.createElement('option');
+      opt.value = tag; opt.textContent = tag;
+      selTag.appendChild(opt);
+    });
+  }
+}
+
+function renderEvolucaoAluno() {
+  const id = document.getElementById('selectAlunoEvo').value;
+
+  document.getElementById('evoPlaceholder').style.display    = id ? 'none'  : 'block';
+  document.getElementById('evoPainelConteudo').style.display = id ? 'block' : 'none';
+  document.getElementById('evoAlunoBadge').style.display     = id ? 'flex'  : 'none'; // ← LINHA NOVA
+
+  if (!id) return;
+
+  const u = USERS[id];
+  document.getElementById('evoAlunoNome').textContent  = u.name;
+  document.getElementById('evoAlunoTurma').textContent = u.turma ? `Turma ${u.turma}` : '';
+  // ← remova a linha document.getElementById('evoAlunoBadge')... daqui pois já está acima
+
+  renderEvoCards(u);
+  renderGraficoEvoAluno(u);
+  renderDificuldades(u);
+  renderRadarAluno(u);
+  renderComparativo(u);
+  renderTabelaEvo();
+}
+
+function renderEvoCards(u) {
+  const pcts     = TAGS.map(tag => pctCorrect(u.performance[tag]));
+  const media    = Math.round(pcts.reduce((a, b) => a + b, 0) / pcts.length);
+  const tagsOk   = pcts.filter(p => p >= state.threshold).length;
+  const tagsCrit = pcts.filter(p => p < 70).length;
+  const evo      = u.evolution;
+  let variacao   = '—';
+  if (evo.length >= 2) {
+    const mp = Math.round(Object.values(evo[0].scores).reduce((a,b)=>a+b,0) / TAGS.length);
+    const mu = Math.round(Object.values(evo[evo.length-1].scores).reduce((a,b)=>a+b,0) / TAGS.length);
+    const d  = mu - mp;
+    variacao = (d >= 0 ? '+' : '') + d + 'pts';
+  }
+  document.getElementById('evoStatsGrid').innerHTML = `
+    <div class="stat-card blue">
+      <span class="stat-icon">🎯</span>
+      <span class="stat-label">Média Geral</span>
+      <span class="stat-value">${media}%</span>
+      <span class="stat-sub">média entre as ${TAGS.length} TAGs</span>
+    </div>
+    <div class="stat-card ${tagsOk === TAGS.length ? '' : 'danger'}">
+      <span class="stat-icon">✅</span>
+      <span class="stat-label">TAGs Aprovadas</span>
+      <span class="stat-value">${tagsOk}/${TAGS.length}</span>
+      <span class="stat-sub">acima de ${state.threshold}%</span>
+    </div>
+    <div class="stat-card ${tagsCrit > 0 ? 'danger' : ''}">
+      <span class="stat-icon">⚠️</span>
+      <span class="stat-label">TAGs Críticas</span>
+      <span class="stat-value">${tagsCrit}</span>
+      <span class="stat-sub">abaixo de 70%</span>
+    </div>
+    <div class="stat-card blue">
+      <span class="stat-icon">📈</span>
+      <span class="stat-label">Variação Geral</span>
+      <span class="stat-value">${variacao}</span>
+      <span class="stat-sub">${evo.length} avaliação(ões)</span>
+    </div>
+  `;
+}
+
+function renderGraficoEvoAluno(u) {
+  destroyChart('evoAluno');
+  const evo    = u.evolution;
+  const labels = evo.map(e => e.label);
+  const selTag = document.getElementById('evoTagFiltro')?.value || '__all__';
+  const datasets = selTag === '__all__'
+    ? TAGS.map((tag, i) => ({
+        label: tag, data: evo.map(e => e.scores[tag]),
+        borderColor: PALETTE[i % PALETTE.length],
+        backgroundColor: PALETTE[i % PALETTE.length] + '22',
+        borderWidth: 2, pointRadius: 4, tension: 0.35, fill: false,
+      }))
+    : [{
+        label: selTag, data: evo.map(e => e.scores[selTag]),
+        borderColor: COLOR_CORRECT, backgroundColor: COLOR_CORRECT_ALPHA,
+        borderWidth: 3, pointRadius: 6, tension: 0.35, fill: true,
+      }];
+  const ctx = document.getElementById('chartEvoAluno').getContext('2d');
+  state.charts.evoAluno = new Chart(ctx, {
+    type: 'line',
+    data: { labels, datasets },
+    options: {
+      responsive: true,
+      interaction: { mode: 'index' },
+      plugins: {
+  legend: {
+    position: 'top',
+    labels: { usePointStyle: true, pointStyle: 'line' },
+  },
+        tooltip: { callbacks: { label: c => ` ${c.dataset.label}: ${c.parsed.y}%` } },
+      },
+      scales: {
+        x: { grid: { display: false } },
+        y: { min: 0, max: 100, ticks: { callback: v => v + '%' } },
+      },
+    },
+  });
+}
+
+function atualizarGraficoEvo() {
+  const id = document.getElementById('selectAlunoEvo').value;
+  if (id) renderGraficoEvoAluno(USERS[id]);
+}
+
+function renderDificuldades(u) {
+  const tagsCrit = TAGS
+    .map(tag => ({ tag, pct: pctCorrect(u.performance[tag]) }))
+    .filter(t => t.pct < 70)
+    .sort((a, b) => a.pct - b.pct);
+  const el = document.getElementById('evoDificuldades');
+  if (tagsCrit.length === 0) {
+    el.innerHTML = `
+      <div style="text-align:center;padding:1.5rem 0;color:var(--verde-medio);">
+        <div style="font-size:2rem;margin-bottom:.5rem;">🏆</div>
+        <p style="font-weight:600;">Nenhuma dificuldade crítica!</p>
+        <p style="font-size:.8rem;color:var(--cinza-400);">Todas as TAGs estão acima de 70%</p>
+      </div>`;
+    return;
+  }
+  el.innerHTML = tagsCrit.map((item, i) => {
+    const cor       = item.pct < 50 ? COLOR_WRONG : '#f59e0b';
+    const rankClass = ['dific-rank-1','dific-rank-2','dific-rank-3'][i] || 'dific-rank-n';
+    const desc      = item.pct < 40 ? 'Nível crítico — reforço urgente'
+                    : item.pct < 55 ? 'Dificuldade acentuada' : 'Abaixo do esperado';
+    return `
+      <div class="dific-item">
+        <div class="dific-rank ${rankClass}">${i + 1}</div>
+        <div class="dific-info">
+          <div class="dific-tag">${item.tag.replace('BIO_','')} — ${item.tag}</div>
+          <div class="dific-desc">${desc}</div>
+        </div>
+        <div class="dific-barra-wrap">
+          <div class="dific-barra" style="width:${item.pct}%;background:${cor};"></div>
+        </div>
+        <div class="dific-pct" style="color:${cor}">${item.pct}%</div>
+      </div>`;
+  }).join('');
+}
+
+function renderRadarAluno(u) {
+  destroyChart('evoRadar');
+  const ctx = document.getElementById('chartEvoRadar').getContext('2d');
+  state.charts.evoRadar = new Chart(ctx, {
+    type: 'radar',
+    data: {
+      labels: TAGS.map(t => t.replace('BIO_','')),
+      datasets: [{
+        label: 'Desempenho atual',
+        data: TAGS.map(tag => pctCorrect(u.performance[tag])),
+        borderColor: COLOR_CORRECT, backgroundColor: COLOR_CORRECT_ALPHA,
+        borderWidth: 2, pointRadius: 4,
+      }],
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        r: {
+          min: 0, max: 100,
+          ticks: { stepSize: 20, callback: v => v + '%' },
+          pointLabels: { font: { size: 11, weight: '600' } },
+        },
+      },
+    },
+  });
+}
+
+function renderComparativo(u) {
+  destroyChart('evoComparativo');
+  const evo   = u.evolution;
+  const bloco = document.getElementById('blocoComparativo');
+  if (evo.length < 2) {
+    bloco.innerHTML = `
+      <h3>⚖️ Comparativo — Primeira vs. Última Avaliação</h3>
+      <p style="color:var(--cinza-400);text-align:center;padding:2rem 0;font-style:italic;">
+        Necessário pelo menos 2 avaliações para o comparativo
+      </p>`;
+    return;
+  }
+  bloco.innerHTML = `
+    <h3>⚖️ Comparativo — Primeira vs. Última Avaliação</h3>
+    <canvas id="chartEvoComparativo" height="120"></canvas>`;
+  const ctx = document.getElementById('chartEvoComparativo').getContext('2d');
+  state.charts.evoComparativo = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: TAGS.map(t => t.replace('BIO_','')),
+      datasets: [
+        { label: '1ª Avaliação',     data: TAGS.map(t => evo[0].scores[t]),              backgroundColor: 'rgba(59,130,246,0.6)', borderRadius: 4 },
+        { label: 'Última Avaliação', data: TAGS.map(t => evo[evo.length-1].scores[t]),   backgroundColor: 'rgba(45,138,86,0.7)',  borderRadius: 4 },
+      ],
+    },
+    options: {
+      responsive: true,
+      interaction: { mode: 'index' },
+      plugins: {
+  legend: {
+    position: 'top',
+    labels: { usePointStyle: true, pointStyle: 'line' },
+  },
+},
+      scales: {
+        x: { grid: { display: false } },
+        y: { min: 0, max: 100, ticks: { callback: v => v + '%' } },
+      },
+    },
+  });
+}
+
+function renderTabelaEvo() {
+  const id = document.getElementById('selectAlunoEvo').value;
+  if (!id) return;
+  const u     = USERS[id];
+  const ordem = document.getElementById('evoTabelaOrdem').value;
+  let stats   = TAGS.map(tag => ({
+    tag, correct: u.performance[tag].correct, wrong: u.performance[tag].wrong,
+    total: u.performance[tag].correct + u.performance[tag].wrong,
+    pct: pctCorrect(u.performance[tag]),
+  }));
+  if (ordem === 'pct_asc')  stats.sort((a,b) => a.pct - b.pct);
+  if (ordem === 'pct_desc') stats.sort((a,b) => b.pct - a.pct);
+  if (ordem === 'erros')    stats.sort((a,b) => b.wrong - a.wrong);
+  const tC = stats.reduce((s,t) => s+t.correct,0);
+  const tE = stats.reduce((s,t) => s+t.wrong,0);
+  const tT = tC + tE;
+  const mG = tT > 0 ? Math.round((tC/tT)*100) : 0;
+  document.getElementById('tabelaEvoHead').innerHTML = `
+    <tr>
+      <th>TAG</th><th>✅ Acertos</th><th>❌ Erros</th>
+      <th>📝 Total</th><th>% Acerto</th><th>Status</th>
+    </tr>`;
+  const tbody = document.getElementById('tabelaEvoBody');
+  tbody.innerHTML = stats.map(t => {
+    const cor    = t.pct >= state.threshold ? '#166534' : t.pct >= state.threshold-10 ? '#854d0e' : '#991b1b';
+    const status = t.pct >= state.threshold ? '✅ OK' : t.pct >= 70 ? '🟡 Atenção' : '🔴 Crítico';
+    return `
+      <tr>
+        <td class="td-nome">${t.tag}</td>
+        <td style="color:#166534;font-weight:600">${t.correct}</td>
+        <td style="color:#991b1b;font-weight:600">${t.wrong}</td>
+        <td style="color:var(--cinza-700)">${t.total}</td>
+        <td><span class="cell-pct ${cellClass(t.pct)}">${t.pct}%</span></td>
+        <td style="font-size:.82rem;font-weight:600;color:${cor}">${status}</td>
+      </tr>`;
+  }).join('');
+  tbody.innerHTML += `
+    <tr style="background:var(--cinza-100);font-weight:700;border-top:2px solid var(--cinza-200)">
+      <td>TOTAL</td>
+      <td style="color:#166534">${tC}</td>
+      <td style="color:#991b1b">${tE}</td>
+      <td>${tT}</td>
+      <td><span class="cell-pct ${cellClass(mG)}">${mG}%</span></td>
+      <td style="font-size:.82rem">Média geral</td>
+    </tr>`;
+}
+
+/* ══════════════════════════════════════════════════
+   MÓDULO DE CALENDÁRIO
+   ══════════════════════════════════════════════════ */
+
+const CAL = {
+  hoje:       new Date(),
+  mes:        new Date().getMonth(),
+  ano:        new Date().getFullYear(),
+  eventoEdit: null,   // evento sendo editado (null = novo)
+};
+
+const MESES_PT = [
+  'Janeiro','Fevereiro','Março','Abril','Maio','Junho',
+  'Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'
+];
+const TIPOS_EVENTO = {
+  aula:     { label: 'Aula',     emoji: '📚', classe: 'cal-evt-aula'     },
+  simulado: { label: 'Simulado', emoji: '📝', classe: 'cal-evt-simulado' },
+  reforco:  { label: 'Reforço',  emoji: '🔄', classe: 'cal-evt-reforco'  },
+  outro:    { label: 'Outro',    emoji: '📌', classe: 'cal-evt-outro'    },
+};
+
+/* ── Persistência ─────────────────────────────── */
+function calCarregarEventos() {
+  try {
+    return JSON.parse(localStorage.getItem('biotrack_eventos') || '[]');
+  } catch { return []; }
+}
+function calSalvarEventos(eventos) {
+  localStorage.setItem('biotrack_eventos', JSON.stringify(eventos));
+}
+function calGerarId() {
+  return `evt_${Date.now()}_${Math.random().toString(36).slice(2,7)}`;
+}
+
+/* ── Navegação do mês ─────────────────────────── */
+function calNavegar(delta) {
+  CAL.mes += delta;
+  if (CAL.mes > 11) { CAL.mes = 0;  CAL.ano++; }
+  if (CAL.mes < 0)  { CAL.mes = 11; CAL.ano--; }
+  calRenderizarGrid();
+  calRenderizarAgenda();
+}
+function calIrHoje() {
+  CAL.mes = CAL.hoje.getMonth();
+  CAL.ano = CAL.hoje.getFullYear();
+  calRenderizarGrid();
+  calRenderizarAgenda();
+}
+
+/* ── Ponto de entrada da aba ─────────────────── */
+function renderCalendario() {
+  const isProfessor = state.perfil === 'professor';
+  const addBtn      = document.getElementById('calAddBtn');
+  if (addBtn) addBtn.style.display = isProfessor ? 'flex' : 'none';
+  calRenderizarGrid();
+  calRenderizarAgenda();
+}
+
+/* ── Grid mensal ─────────────────────────────── */
+function calRenderizarGrid() {
+  document.getElementById('calMesAno').textContent =
+    `${MESES_PT[CAL.mes]} ${CAL.ano}`;
+
+  const eventos       = calCarregarEventos();
+  const primeiroDia   = new Date(CAL.ano, CAL.mes, 1).getDay();
+  const ultimoDia     = new Date(CAL.ano, CAL.mes + 1, 0).getDate();
+  const ultimoMesAnt  = new Date(CAL.ano, CAL.mes, 0).getDate();
+  const grid          = document.getElementById('calGrid');
+  let   html          = '';
+  let   diaGrid       = 1;
+
+  // Dias do mês anterior
+  for (let i = 0; i < primeiroDia; i++) {
+    const d = ultimoMesAnt - primeiroDia + 1 + i;
+    html += `<div class="cal-dia outro-mes">
+               <div class="cal-dia-num">${d}</div>
+             </div>`;
+    diaGrid++;
+  }
+
+  // Dias do mês atual
+  for (let d = 1; d <= ultimoDia; d++) {
+    const dataStr   = `${CAL.ano}-${String(CAL.mes+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const evtsDia   = eventos.filter(e => e.data === dataStr);
+    const ehHoje    = (d === CAL.hoje.getDate() &&
+                       CAL.mes === CAL.hoje.getMonth() &&
+                       CAL.ano === CAL.hoje.getFullYear());
+    const diaSemana = new Date(CAL.ano, CAL.mes, d).getDay();
+    const classDia  = `cal-dia${ehHoje ? ' hoje' : ''}${diaSemana === 0 ? ' domingo' : ''}${diaSemana === 6 ? ' sabado' : ''}`;
+
+    const LIMITE  = 2;
+    let   chipsHtml = '';
+    evtsDia.slice(0, LIMITE).forEach(e => {
+      const tipo = TIPOS_EVENTO[e.tipo] || TIPOS_EVENTO.outro;
+      chipsHtml += `
+        <span class="cal-evt-chip ${tipo.classe}"
+              onclick="calVerEvento('${e.id}', event)"
+              title="${e.titulo}">
+          ${tipo.emoji} ${e.titulo}
+        </span>`;
+    });
+    if (evtsDia.length > LIMITE) {
+      chipsHtml += `<span class="cal-mais"
+                         onclick="calVerDia('${dataStr}', event)">
+                      +${evtsDia.length - LIMITE} mais
+                    </span>`;
+    }
+
+    // Professor pode clicar no dia para criar evento
+    const clickDia = state.perfil === 'professor'
+      ? `onclick="calAbrirModal('${dataStr}')"`
+      : '';
+
+    html += `
+      <div class="${classDia}" ${clickDia}
+           title="${state.perfil === 'professor' ? 'Clique para adicionar evento' : ''}">
+        <div class="cal-dia-num">${d}</div>
+        ${chipsHtml}
+      </div>`;
+    diaGrid++;
+  }
+
+  // Dias do próximo mês
+  const restantes = 42 - diaGrid + 1;
+  for (let d = 1; d <= restantes; d++) {
+    html += `<div class="cal-dia outro-mes">
+               <div class="cal-dia-num">${d}</div>
+             </div>`;
+  }
+
+  grid.innerHTML = html;
+}
+
+/* ── Agenda lateral ──────────────────────────── */
+function calRenderizarAgenda() {
+  const eventos = calCarregarEventos();
+  const hoje    = new Date();
+  hoje.setHours(0,0,0,0);
+
+  const proximos = eventos
+    .filter(e => new Date(e.data + 'T00:00:00') >= hoje)
+    .sort((a, b) => a.data.localeCompare(b.data) ||
+                    (a.horaInicio||'').localeCompare(b.horaInicio||''))
+    .slice(0, 12);
+
+  const lista = document.getElementById('calAgendaLista');
+  if (proximos.length === 0) {
+    lista.innerHTML = '<p class="cal-agenda-vazio">Nenhum evento próximo</p>';
+    return;
+  }
+
+  const meses = ['Jan','Fev','Mar','Abr','Mai','Jun',
+                 'Jul','Ago','Set','Out','Nov','Dez'];
+
+  lista.innerHTML = proximos.map(e => {
+    const dt   = new Date(e.data + 'T00:00:00');
+    const tipo = TIPOS_EVENTO[e.tipo] || TIPOS_EVENTO.outro;
+    const hora = e.horaInicio
+      ? `${e.horaInicio}${e.horaFim ? ' – ' + e.horaFim : ''}`
+      : 'Dia todo';
+    return `
+      <div class="cal-agenda-item" onclick="calVerEvento('${e.id}')">
+        <div class="cal-agenda-data">
+          <span class="cal-agenda-dia">${dt.getDate()}</span>
+          <span class="cal-agenda-mes">${meses[dt.getMonth()]}</span>
+        </div>
+        <div class="cal-agenda-info">
+          <div class="cal-agenda-titulo">${e.titulo}</div>
+          <div class="cal-agenda-hora">🕐 ${hora}${e.local ? '  📍 '+e.local : ''}</div>
+        </div>
+        <span class="cal-agenda-tipo ${tipo.classe.replace('cal-evt-','cal-det-')}"
+              style="font-size:.7rem">
+          ${tipo.emoji} ${tipo.label}
+        </span>
+      </div>`;
+  }).join('');
+}
+
+/* ── Modal: Novo / Editar evento (professor) ── */
+function calAbrirModal(dataPreenchida = '', eventoId = null) {
+  if (state.perfil !== 'professor') return;
+
+  let evento = null;
+  if (eventoId) {
+    evento       = calCarregarEventos().find(e => e.id === eventoId);
+    CAL.eventoEdit = evento;
+  } else {
+    CAL.eventoEdit = null;
+  }
+
+  const titulo    = evento?.titulo      || '';
+  const tipo      = evento?.tipo        || 'aula';
+  const data      = evento?.data        || dataPreenchida;
+  const horaIni   = evento?.horaInicio  || '';
+  const horaFim   = evento?.horaFim     || '';
+  const descricao = evento?.descricao   || '';
+  const local     = evento?.local       || '';
+
+  const opcoesTipo = Object.entries(TIPOS_EVENTO).map(([val, t]) =>
+    `<option value="${val}" ${tipo === val ? 'selected' : ''}>
+       ${t.emoji} ${t.label}
+     </option>`
+  ).join('');
+
+  document.getElementById('calModal').innerHTML = `
+    <div class="cal-modal-header">
+      <h3>${evento ? '✏️ Editar Evento' : '➕ Novo Evento'}</h3>
+      <button class="cal-modal-close" onclick="calFecharModal()">✕</button>
+    </div>
+    <div class="cal-modal-body">
+      <div class="cal-form-group">
+        <label>Título *</label>
+        <input id="calFTitulo" type="text" placeholder="Ex: Simulado Bimestral"
+               value="${titulo}" maxlength="60" />
+      </div>
+      <div class="cal-form-row">
+        <div class="cal-form-group">
+          <label>Tipo *</label>
+          <select id="calFTipo">${opcoesTipo}</select>
+        </div>
+        <div class="cal-form-group">
+          <label>Data *</label>
+          <input id="calFData" type="date" value="${data}" />
+        </div>
+      </div>
+      <div class="cal-form-row">
+        <div class="cal-form-group">
+          <label>Hora Início</label>
+          <input id="calFHoraIni" type="time" value="${horaIni}" />
+        </div>
+        <div class="cal-form-group">
+          <label>Hora Fim</label>
+          <input id="calFHoraFim" type="time" value="${horaFim}" />
+        </div>
+      </div>
+      <div class="cal-form-group">
+        <label>Local</label>
+        <input id="calFLocal" type="text"
+               placeholder="Ex: Sala 12, Laboratório..." value="${local}" />
+      </div>
+      <div class="cal-form-group">
+        <label>Descrição / Detalhes</label>
+        <textarea id="calFDesc"
+                  placeholder="Conteúdos, instruções, observações...">${descricao}</textarea>
+      </div>
+    </div>
+    <div class="cal-modal-footer">
+      ${evento ? `<button class="cal-btn-deletar"
+                          onclick="calDeletarEvento('${evento.id}')">
+                    🗑️ Excluir
+                  </button>` : ''}
+      <button class="cal-btn-cancelar" onclick="calFecharModal()">Cancelar</button>
+      <button class="cal-btn-salvar"   onclick="calSalvarEvento()">
+        ${evento ? 'Salvar Alterações' : '✓ Criar Evento'}
+      </button>
+    </div>
+  `;
+
+  document.getElementById('calModalOverlay').style.display = 'flex';
+  setTimeout(() => document.getElementById('calFTitulo').focus(), 100);
+}
+
+/* ── Modal: Ver detalhes (aluno e professor) ── */
+function calVerEvento(id, evt) {
+  if (evt) evt.stopPropagation();
+  const evento = calCarregarEventos().find(e => e.id === id);
+  if (!evento) return;
+  const tipo = TIPOS_EVENTO[evento.tipo] || TIPOS_EVENTO.outro;
+  const dt   = new Date(evento.data + 'T00:00:00');
+  const hora = evento.horaInicio
+    ? `${evento.horaInicio}${evento.horaFim ? ' – ' + evento.horaFim : ''}`
+    : 'Dia todo';
+
+  document.getElementById('calModal').innerHTML = `
+    <div class="cal-modal-header">
+      <h3>${tipo.emoji} Detalhes do Evento</h3>
+      <button class="cal-modal-close" onclick="calFecharModal()">✕</button>
+    </div>
+    <div class="cal-modal-body">
+      <span class="cal-det-tipo ${tipo.classe}">
+        ${tipo.emoji} ${tipo.label}
+      </span>
+      <h2 style="font-size:1.15rem;font-weight:700;
+                 margin-bottom:1.25rem;color:var(--cinza-900)">
+        ${evento.titulo}
+      </h2>
+      <div class="cal-det-row">
+        <span class="cal-det-icone">📅</span>
+        <span class="cal-det-label">Data</span>
+        <span class="cal-det-valor">
+          ${dt.toLocaleDateString('pt-BR', {weekday:'long',day:'numeric',
+            month:'long',year:'numeric'})}
+        </span>
+      </div>
+      <div class="cal-det-row">
+        <span class="cal-det-icone">🕐</span>
+        <span class="cal-det-label">Horário</span>
+        <span class="cal-det-valor">${hora}</span>
+      </div>
+      ${evento.local ? `
+      <div class="cal-det-row">
+        <span class="cal-det-icone">📍</span>
+        <span class="cal-det-label">Local</span>
+        <span class="cal-det-valor">${evento.local}</span>
+      </div>` : ''}
+      ${evento.descricao ? `
+      <div class="cal-det-row">
+        <span class="cal-det-icone">📝</span>
+        <span class="cal-det-label">Detalhes</span>
+        <span class="cal-det-valor"
+              style="white-space:pre-line">${evento.descricao}</span>
+      </div>` : ''}
+    </div>
+    <div class="cal-modal-footer">
+      ${state.perfil === 'professor' ? `
+        <button class="cal-btn-deletar"
+                onclick="calDeletarEvento('${evento.id}')">
+          🗑️ Excluir
+        </button>
+        <button class="cal-btn-salvar"
+                onclick="calAbrirModal('', '${evento.id}')">
+          ✏️ Editar
+        </button>` :
+        `<button class="cal-btn-cancelar"
+                 onclick="calFecharModal()">Fechar</button>`}
+    </div>
+  `;
+  document.getElementById('calModalOverlay').style.display = 'flex';
+}
+
+/* ── Salvar evento ────────────────────────────── */
+function calSalvarEvento() {
+  const titulo   = document.getElementById('calFTitulo').value.trim();
+  const data     = document.getElementById('calFData').value;
+  const tipo     = document.getElementById('calFTipo').value;
+  const horaIni  = document.getElementById('calFHoraIni').value;
+  const horaFim  = document.getElementById('calFHoraFim').value;
+  const local    = document.getElementById('calFLocal').value.trim();
+  const descricao= document.getElementById('calFDesc').value.trim();
+
+  // Validação mínima
+  if (!titulo) {
+    document.getElementById('calFTitulo').style.borderColor = 'var(--vermelho)';
+    document.getElementById('calFTitulo').focus();
+    return;
+  }
+  if (!data) {
+    document.getElementById('calFData').style.borderColor = 'var(--vermelho)';
+    document.getElementById('calFData').focus();
+    return;
+  }
+
+  const eventos = calCarregarEventos();
+
+  if (CAL.eventoEdit) {
+    // Editar existente
+    const idx = eventos.findIndex(e => e.id === CAL.eventoEdit.id);
+    if (idx !== -1) {
+      eventos[idx] = { ...eventos[idx], titulo, tipo, data,
+                       horaInicio: horaIni, horaFim, local, descricao };
+    }
+  } else {
+    // Novo evento
+    eventos.push({
+      id: calGerarId(), titulo, tipo, data,
+      horaInicio: horaIni, horaFim, local, descricao,
+      criadoPor: state.user?.name || 'Professor',
+      criadoEm:  Date.now(),
+    });
+  }
+
+  calSalvarEventos(eventos);
+  calFecharModal();
+  calRenderizarGrid();
+  calRenderizarAgenda();
+}
+
+/* ── Deletar evento ───────────────────────────── */
+function calDeletarEvento(id) {
+  if (!confirm('Deseja excluir este evento permanentemente?')) return;
+  const eventos = calCarregarEventos().filter(e => e.id !== id);
+  calSalvarEventos(eventos);
+  calFecharModal();
+  calRenderizarGrid();
+  calRenderizarAgenda();
+}
+
+/* ── Fechar modal ─────────────────────────────── */
+function calFecharModal() {
+  document.getElementById('calModalOverlay').style.display = 'none';
+  CAL.eventoEdit = null;
+}
+function calFecharModalOverlay(evt) {
+  if (evt.target === document.getElementById('calModalOverlay')) {
+    calFecharModal();
+  }
 }
 
 /* 
